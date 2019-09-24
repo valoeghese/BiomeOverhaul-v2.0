@@ -1,4 +1,4 @@
-package valoeghese.biomeoverhaul.impl.type;
+package tk.valoeghese.biomeoverhaul.impl.type;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -13,10 +13,10 @@ public final class OverhaulWorldtypeProvider
 	/**
 	 * Credit: Beta-Plus mod, fabric 1.14
 	 */
-	public static LevelGeneratorType getWorldType()
+	public static LevelGeneratorType createWorldType(String name)
 	{
 		LevelGeneratorType worldType;
-		int id = 9;
+		int id = 7;
 		Field types = null;
 
 		for(Field f : LevelGeneratorType.class.getDeclaredFields())
@@ -57,7 +57,7 @@ public final class OverhaulWorldtypeProvider
 		{
 			Constructor<LevelGeneratorType> constructor = LevelGeneratorType.class.getDeclaredConstructor(int.class, String.class);
 			constructor.setAccessible(true);
-			worldType = constructor.newInstance(id, "biomeoverhaul");
+			worldType = constructor.newInstance(id, name);
 			worldType.setCustomizable(false);
 		} catch (Exception e)
 		{

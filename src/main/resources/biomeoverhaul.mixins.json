@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "valoeghese.biomeoverhaul.mixin",
+  "package": "tk.valoeghese.biomeoverhaul.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "OverworldDimensionMixin"

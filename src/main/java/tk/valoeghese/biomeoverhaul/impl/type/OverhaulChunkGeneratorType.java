@@ -1,4 +1,4 @@
-package valoeghese.biomeoverhaul.impl.type;
+package tk.valoeghese.biomeoverhaul.impl.type;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
@@ -10,7 +10,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.world.World;
-import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.gen.chunk.ChunkGeneratorType;
 
 public class OverhaulChunkGeneratorType implements InvocationHandler
@@ -36,17 +35,16 @@ public class OverhaulChunkGeneratorType implements InvocationHandler
         factoryProxy = Proxy.newProxyInstance(factoryClass.getClassLoader(), new Class[]{factoryClass}, this);
     }
 
-    public OverhaulChunkGenerator createProxy(World w, BiomeSource biomesource, OverhaulChunkGeneratorConfig gensettings) {
+    public OverhaulChunkGenerator createProxy(World w, OverhaulBiomeSource biomesource, OverhaulChunkGeneratorConfig gensettings) {
         return new OverhaulChunkGenerator(w, biomesource, gensettings);
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
     {
-        if (args.length == 3 && args[0] instanceof World && args[1] instanceof BiomeSource && args[2] instanceof OverhaulChunkGeneratorConfig)
+        if (args.length == 3 && args[0] instanceof World && args[1] instanceof OverhaulBiomeSource && args[2] instanceof OverhaulChunkGeneratorConfig)
         {
-
-            return createProxy((World) args[0], (BiomeSource) args[1], (OverhaulChunkGeneratorConfig) args[2]);
+            return createProxy((World) args[0], (OverhaulBiomeSource) args[1], (OverhaulChunkGeneratorConfig) args[2]);
         }
         throw (new UnsupportedOperationException("Unknown Method: " + method.toString()));
     }

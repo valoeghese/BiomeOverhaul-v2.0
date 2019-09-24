@@ -8,11 +8,6 @@
   "authors": [
     "Valoeghese"
   ],
-  "contact": {
-    "homepage": "https://minecraft.curseforge.com/projects/the-biome-overhaul",
-    "sources": "https://github.com/valoeghese/TheBiomeOverhaul",
-    "issues": "https://github.com/valoeghese/TheBiomeOverhaul/issues"
-  },
   
   "license": "LGPLv3",
   
@@ -20,8 +15,7 @@
   
   "entrypoints": {
     "main": [
-       "valoeghese.biomeoverhaul.BiomeOverhaul",
-       "valoeghese.biomeoverhaul.tbo.TheBiomeOverhaul"
+       "tk.valoeghese.biomeoverhaul.BiomeOverhaul"
     ]
   },
   
