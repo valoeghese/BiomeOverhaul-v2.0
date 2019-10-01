@@ -76,12 +76,12 @@ public final class OverhaulBiomeSource extends BiomeSource
 	public Set<Biome> getBiomesInArea(int x, int z, int range) {
 		int int_4 = x - range >> 2;;
 		int int_5 = z - range >> 2;
-				int int_6 = x + range >> 2;
-				int int_7 = z + range >> 2;
-				int xSize = int_6 - int_4 + 1;
-				int zSize = int_7 - int_5 + 1;
-
-				return Sets.newHashSet(this.sampleBiomes(x, z, xSize, zSize));
+		int int_6 = x + range >> 2;
+		int int_7 = z + range >> 2;
+		int xSize = int_6 - int_4 + 1;
+		int zSize = int_7 - int_5 + 1;
+		
+		return Sets.newHashSet(this.sampleBiomes(x, z, xSize, zSize));
 	}
 
 	@Override
