@@ -83,8 +83,10 @@ public class BiomeOverhaul implements ModInitializer {
 		
 		WorldType biomeOverhaul = WorldType.builder()
 				.addLerpedHeightNoise(3, 50.0D, 10.0D, 0.0004D)
-				.addLerpedHeightNoise(2, 10.6D, 4.4D, 0.06D)
-				.setHeightOffset(39.0D)
+				.addLerpedHeightNoise(2, 8.6D, 4.4D, 0.06D)
+				.addHeightNoise(1, 4.0D, 2.0D, 0.001D)
+				.setHeightOffset(47.0D)
+				.setSeaLevel(40)
 				.setSurface(overhaulSurface)
 				.build("biomeoverhaul");
 		

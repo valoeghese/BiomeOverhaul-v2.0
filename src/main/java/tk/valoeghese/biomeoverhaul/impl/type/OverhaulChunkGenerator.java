@@ -5,7 +5,9 @@ import java.util.Random;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.ChunkRegion;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.chunk.SurfaceChunkGenerator;
@@ -14,8 +16,7 @@ import tk.valoeghese.biomeoverhaul.api.surface.Surface;
 import tk.valoeghese.biomeoverhaul.impl.WorldTypeImpl;
 import tk.valoeghese.biomeoverhaul.util.OctaveOpenSimplexNoise;
 
-public class OverhaulChunkGenerator extends SurfaceChunkGenerator<OverhaulChunkGeneratorConfig>
-{
+public class OverhaulChunkGenerator extends SurfaceChunkGenerator<OverhaulChunkGeneratorConfig> {
     private OctaveOpenSimplexNoise blockNoise;
     private final WorldTypeImpl.WorldGenerator generator;
     private final WorldTypeInstance worldType;
@@ -47,20 +48,20 @@ public class OverhaulChunkGenerator extends SurfaceChunkGenerator<OverhaulChunkG
 		int x = chunkPos.getStartX();
 		int z = chunkPos.getStartZ();
 		
-		Surface[] biomes = this.worldType.getSurfaces(x, z, 16, 16);
+		Surface[] surfaces = this.worldType.getSurfaces(x, z, 16, 16);
 		
 		// TODO biome based height/depth maps
-		this.generator.generateChunk(chunk, x, z, biomes);
+		this.generator.generateChunk(chunk, x, z, surfaces);
 		
 		// Surface
-		/*
+		Biome[] biomes = this.biomeSource.sampleBiomes(x, z, 16, 16);
+		
 		for (int localX = 0; localX < 16; ++localX) {
 			for (int localZ = 0; localZ < 16; ++localZ) {
 				int height = chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE_WG, localX, localZ) + 1;
 				biomes[localZ + localX * 16].buildSurface(rand, chunk, localX + x, localZ + z, height, blockNoise.noise(localX + x, localZ + z), this.getConfig().getDefaultBlock(), this.config.getDefaultFluid(), this.getSeaLevel(), this.world.getSeed());
 			}
 		}
-		*/
     }
 
     public int getSpawnHeight() {

@@ -12,8 +12,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.layer.BiomeLayerSampler;
 import net.minecraft.world.biome.layer.CachingLayerContext;
 import net.minecraft.world.biome.layer.CachingLayerSampler;
 import net.minecraft.world.biome.layer.CellScaleLayer;
@@ -38,9 +36,9 @@ public final class WorldTypeImpl {
 	}
 
 	public static <T> T[] sampleArea(T[] biomes, int x, int z, int width, int depth, Coordinate2Function<T> biomeFunction) {
-		for (int i = 0; i < width; ++i) {
-			for (int j = 0; j < depth; ++j) {
-				biomes[j + i * depth] = biomeFunction.apply(x + i, z + j);
+		for (int localX = 0; localX < width; ++localX) {
+			for (int localZ = 0; localZ < depth; ++localZ) {
+				biomes[localZ + localX * depth] = biomeFunction.apply(x + localX, z + localZ);
 			}
 		}
 
@@ -285,14 +283,14 @@ public final class WorldTypeImpl {
 			this.biomeSampler = biomeSampler;
 		}
 
-		public void generateChunk(Chunk chunk, int x, int z, Surface[] biomes) {
+		public void generateChunk(Chunk chunk, int x, int z, Surface[] surfaces) {
 			int chunkX = x >> 4;
 			int chunkZ = z >> 4;
 
-			double sampleNW = sampleChunkNoise(chunkX << 4, chunkZ << 4, biomes[0]);
-			double sampleNE = sampleChunkNoise((chunkX + 1) << 4, chunkZ << 4, biomes[15]);
-			double sampleSW = sampleChunkNoise(chunkX << 4, (chunkZ + 1) << 4, biomes[240]); // 15 * 16
-			double sampleSE = sampleChunkNoise((chunkX + 1) << 4, (chunkZ + 1) << 4, biomes[255]);
+			double sampleNW = sampleChunkNoise(chunkX << 4, chunkZ << 4, surfaces[0]);
+			double sampleNE = sampleChunkNoise((chunkX + 1) << 4, chunkZ << 4, surfaces[240]);
+			double sampleSW = sampleChunkNoise(chunkX << 4, (chunkZ + 1) << 4, surfaces[15]); // 15 * 16
+			double sampleSE = sampleChunkNoise((chunkX + 1) << 4, (chunkZ + 1) << 4, surfaces[255]);
 
 			for (int localX = 0; localX < 16; ++localX) {
 				for (int localZ = 0; localZ < 16; ++localZ) {
@@ -311,6 +309,60 @@ public final class WorldTypeImpl {
 				}
 			}
 
+		}
+		
+		public int[] createHeightmap(int x, int z, Surface[] surfaces) {
+			int[] result = new int[256];
+			
+			int chunkX = x >> 4;
+			int chunkZ = z >> 4;
+			
+			double sampleNW = sampleChunkNoise(chunkX << 4, chunkZ << 4, surfaces[0]);
+			double sampleNE = sampleChunkNoise((chunkX + 1) << 4, chunkZ << 4, surfaces[240]);
+			double sampleSW = sampleChunkNoise(chunkX << 4, (chunkZ + 1) << 4, surfaces[15]); // 15 * 16
+			double sampleSE = sampleChunkNoise((chunkX + 1) << 4, (chunkZ + 1) << 4, surfaces[255]);
+			
+			for (int localX = 0; localX < 16; ++localX) {
+				for (int localZ = 0; localZ < 16; ++localZ) {
+					double xProg = MathHelper.perlinFade((double)((x + localX) - (chunkX << 4)) / 16D);
+					double zProg = MathHelper.perlinFade((double)((z + localZ) - (chunkZ << 4)) / 16D);
+
+					double chunkSample = heightOffset + MathHelper.lerp2(xProg, zProg, sampleNW, sampleNE, sampleSW, sampleSE);
+					
+					double sample = chunkSample + sampleNoise(x + localX, z + localZ);
+					
+					result[localZ + localX * 16] = MathHelper.floor(sample);
+				}
+			}
+			
+			return result;
+		}
+		
+		public int[] createHeightmap(int x, int z, Surface singleSurface) {
+			int[] result = new int[256];
+			
+			int chunkX = x >> 4;
+			int chunkZ = z >> 4;
+			
+			double sampleNW = sampleChunkNoise(chunkX << 4, chunkZ << 4, singleSurface);
+			double sampleNE = sampleChunkNoise((chunkX + 1) << 4, chunkZ << 4, singleSurface);
+			double sampleSW = sampleChunkNoise(chunkX << 4, (chunkZ + 1) << 4, singleSurface);
+			double sampleSE = sampleChunkNoise((chunkX + 1) << 4, (chunkZ + 1) << 4, singleSurface);
+			
+			for (int localX = 0; localX < 16; ++localX) {
+				for (int localZ = 0; localZ < 16; ++localZ) {
+					double xProg = MathHelper.perlinFade((double)((x + localX) - (chunkX << 4)) / 16D);
+					double zProg = MathHelper.perlinFade((double)((z + localZ) - (chunkZ << 4)) / 16D);
+
+					double chunkSample = heightOffset + MathHelper.lerp2(xProg, zProg, sampleNW, sampleNE, sampleSW, sampleSE);
+					
+					double sample = chunkSample + sampleNoise(x + localX, z + localZ);
+					
+					result[localZ + localX * 16] = MathHelper.floor(sample);
+				}
+			}
+			
+			return result;
 		}
 
 		private BlockState chooseBlock(int y, double sample) {
