@@ -48,9 +48,9 @@ public class BiomeOverhaul implements ModInitializer {
 	
 	public void testMod() {
 		
-		Surface GRASSLAND = new Surface("ocean");
+		Surface GRASSLAND = new Surface("grassland");
 		Surface FOREST = new Surface("forest");
-		Surface SWAMP = new Surface("grassland");
+		Surface SWAMP = new Surface("swamp");
 		Surface DESERT = new Surface("desert");
 		Surface SNOW = new Surface("snow");
 		
@@ -82,9 +82,9 @@ public class BiomeOverhaul implements ModInitializer {
 				.build();
 		
 		WorldType biomeOverhaul = WorldType.builder()
-				.addLerpedHeightNoise(3, 50.0D, 10.0D, 0.0004D)
-				.addLerpedHeightNoise(2, 8.6D, 4.4D, 0.06D)
-				.addHeightNoise(1, 4.0D, 2.0D, 0.001D)
+				.addLerpedHeightNoise(3, 50.0D, 10.0D, 600D)
+				.addLerpedHeightNoise(2, 8.6D, 4.4D, 120D)
+				.addHeightNoise(1, 4.0D, 2.0D, 30D)
 				.setHeightOffset(47.0D)
 				.setSeaLevel(40)
 				.setSurface(overhaulSurface)
