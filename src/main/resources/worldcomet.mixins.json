@@ -1,9 +1,10 @@
 {
   "required": true,
-  "package": "tk.valoeghese.biomeoverhaul.mixin",
+  "package": "tk.valoeghese.worldcomet.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "OverworldDimensionMixin"
+    "OverworldDimensionMixin",
+    "LevelGeneratorTypeAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

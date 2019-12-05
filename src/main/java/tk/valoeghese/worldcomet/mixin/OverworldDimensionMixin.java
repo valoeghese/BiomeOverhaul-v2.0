@@ -1,4 +1,4 @@
-package tk.valoeghese.biomeoverhaul.mixin;
+package tk.valoeghese.worldcomet.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,17 +11,24 @@ import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.dimension.OverworldDimension;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
-import tk.valoeghese.biomeoverhaul.impl.OverworldDimensionImpl;
+import net.minecraft.world.level.LevelGeneratorType;
+import tk.valoeghese.worldcomet.impl.type.WorldCometLevelGeneratorType;
 
 @Mixin(OverworldDimension.class)
 public abstract class OverworldDimensionMixin extends Dimension {
 	public OverworldDimensionMixin(World world, DimensionType type) {
-		super(world, type);
-	}
-	
-	@Inject(method = "createChunkGenerator", at = @At("RETURN"), cancellable = true)
-	public void createChunkGenerator(CallbackInfoReturnable<ChunkGenerator<? extends ChunkGeneratorConfig>> info) {
-		OverworldDimensionImpl.mixinOverworldDimension(this.world, info::setReturnValue);
+		super(world, type, 0);
 	}
 
+	@Inject(method = "createChunkGenerator", at = @At("RETURN"), cancellable = true)
+	public void createChunkGenerator(CallbackInfoReturnable<ChunkGenerator<? extends ChunkGeneratorConfig>> info) {
+		LevelGeneratorType type = this.world.getLevelProperties().getGeneratorType();
+
+		if(WorldCometLevelGeneratorType.LGT_TO_WT_MAP.containsKey(type)) {
+			WorldCometLevelGeneratorType<?> worldType = WorldCometLevelGeneratorType.LGT_TO_WT_MAP.get(type);
+			info.setReturnValue(
+				worldType.chunkGenSupplier.create(this.world)
+			);
+		}
+	}
 }

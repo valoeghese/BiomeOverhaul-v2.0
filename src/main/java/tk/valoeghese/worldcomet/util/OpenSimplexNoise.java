@@ -1,4 +1,4 @@
-package tk.valoeghese.biomeoverhaul.util;
+package tk.valoeghese.worldcomet.util;
 
 /*
  * OpenSimplex Noise in Java.
@@ -62,7 +62,6 @@ public class OpenSimplexNoise {
 	//Generates a proper permutation (i.e. doesn't merely perform N successive pair swaps on a base array)
 	//Uses a simple 64-bit LCG.
 	public OpenSimplexNoise(long seed) {
-		
 		this.seed = seed;
 		perm = new short[256];
 		permGradIndex3D = new short[256];
@@ -81,12 +80,10 @@ public class OpenSimplexNoise {
 			permGradIndex3D[i] = (short)((perm[i] % (gradients3D.length / 3)) * 3);
 			source[r] = source[i];
 		}
-		
-		
 	}
 	
 	//2D OpenSimplex Noise.
-	public double eval(double x, double y) {
+	public double sample(double x, double y) {
 	
 		//Place input coordinates onto grid.
 		double stretchOffset = (x + y) * STRETCH_CONSTANT_2D;
@@ -201,7 +198,7 @@ public class OpenSimplexNoise {
 	}
 	
 	//3D OpenSimplex Noise.
-	public double eval(double x, double y, double z) {
+	public double sample(double x, double y, double z) {
 	
 		//Place input coordinates on simplectic honeycomb.
 		double stretchOffset = (x + y + z) * STRETCH_CONSTANT_3D;
@@ -762,7 +759,7 @@ public class OpenSimplexNoise {
 	}
 	
 	//4D OpenSimplex Noise.
-	public double eval(double x, double y, double z, double w) {
+	public double sample(double x, double y, double z, double w) {
 	
 		//Place input coordinates on simplectic honeycomb.
 		double stretchOffset = (x + y + z + w) * STRETCH_CONSTANT_4D;

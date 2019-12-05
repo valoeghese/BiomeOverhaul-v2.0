@@ -1,12 +1,11 @@
-package tk.valoeghese.biomeoverhaul.impl;
+package tk.valoeghese.worldcomet.impl;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
 import net.minecraft.util.Identifier;
-import tk.valoeghese.biomeoverhaul.api.WorldType;
-import tk.valoeghese.biomeoverhaul.api.surface.Surface;
+import tk.valoeghese.worldcomet.api.surface.Surface;
 
 public final class NamespacedRegistry<T> {
 	protected Map<String, T> info = new HashMap<>();
@@ -55,7 +54,6 @@ public final class NamespacedRegistry<T> {
 		registry.register(id, item);
 		return item;
 	}
-	
-	public static final NamespacedRegistry<WorldType> WORLD_TYPE_FACTORY = NamespacedRegistry.create(WorldType.class, i -> {});
+
 	public static final NamespacedRegistry<Surface> SURFACE = NamespacedRegistry.create(Surface.class, i -> {});
 }
