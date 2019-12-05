@@ -25,7 +25,7 @@ public abstract class OverworldDimensionMixin extends Dimension {
 		LevelGeneratorType type = this.world.getLevelProperties().getGeneratorType();
 
 		if(WorldType.LGT_TO_WT_MAP.containsKey(type)) {
-			WorldType<?> worldType = WorldType.LGT_TO_WT_MAP.get(type);
+			WorldType worldType = WorldType.LGT_TO_WT_MAP.get(type);
 			info.setReturnValue(
 				worldType.chunkGenSupplier.create(this.world)
 			);
