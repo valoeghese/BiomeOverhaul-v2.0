@@ -8,10 +8,15 @@ import net.minecraft.world.biome.source.BiomeSource;
 
 public final class WorldCometBiomeSource extends BiomeSource {
 	private final long worldSeed;
+	private WorldBiomeManager biomeManager = WorldBiomeManager.NONE;
 
 	public WorldCometBiomeSource(IWorld world, Set<Biome> biomes) {
 		super(biomes);
 		this.worldSeed = world.getSeed();
+	}
+
+	public void setBiomeManager(WorldBiomeManager biomeManager) {
+		this.biomeManager = biomeManager;
 	}
 
 	public long getWorldSeed() {
@@ -19,8 +24,11 @@ public final class WorldCometBiomeSource extends BiomeSource {
 	}
 
 	@Override
-	public Biome getBiomeForNoiseGen(int biomeX, int biomeY, int biomeZ) {
-		// TODO Auto-generated method stub
-		return null;
+	public Biome getBiomeForNoiseGen(final int noiseGenX, final int noiseGenY, final int noiseGenZ) {
+		final int x = (noiseGenX << 2);
+		final int z = (noiseGenZ << 2);
+		final int height = this.biomeManager.getHeightForXZ(x, z);
+
+		return this.biomeManager.getSurface(x, z, height).getBiome(height);
 	}
 }

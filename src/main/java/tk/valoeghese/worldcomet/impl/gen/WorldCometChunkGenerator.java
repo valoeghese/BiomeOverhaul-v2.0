@@ -11,30 +11,34 @@ import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
+import tk.valoeghese.worldcomet.api.decoration.WorldDecorator;
+import tk.valoeghese.worldcomet.api.surface.Surface;
 import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 import tk.valoeghese.worldcomet.api.terrain.Depthmap;
 import tk.valoeghese.worldcomet.api.terrain.GeneratorSettings;
 import tk.valoeghese.worldcomet.util.OctaveOpenSimplexNoise;
 
-public class WorldCometChunkGenerator extends ChunkGenerator<WorldCometChunkGeneratorConfig> {
+public class WorldCometChunkGenerator extends ChunkGenerator<WorldCometChunkGeneratorConfig> implements WorldBiomeManager {
 	private final OctaveOpenSimplexNoise blockNoise;
 	private final ChunkRandom rand;
 
 	private final int seaLevel;
 	private final Depthmap depthmap;
 	private final SurfaceProvider surfaceProvider;
+	private final WorldDecorator worldDecorator;
 
 	public WorldCometChunkGenerator(IWorld world, BiomeSource source, WorldCometChunkGeneratorConfig config) {
 		super(world, source, config);
 
-		long seed = world.getSeed();
 		GeneratorSettings settings = config.settings;
 
-		this.rand = new ChunkRandom(seed);
+		this.rand = new ChunkRandom(this.seed);
 		this.blockNoise = new OctaveOpenSimplexNoise(this.rand, 6, 1D, 1D, 0.05D);
 
-		this.depthmap = config.depthmapFactory.apply(seed);
-		this.surfaceProvider = config.providerFactory.apply(seed);
+		this.depthmap = config.depthmapFactory.apply(this.seed);
+		this.surfaceProvider = config.providerFactory.apply(this.seed);
+		this.worldDecorator = config.worldDecorator;
+
 		this.seaLevel = settings.seaLevel;
 	}
 
@@ -59,7 +63,7 @@ public class WorldCometChunkGenerator extends ChunkGenerator<WorldCometChunkGene
 
 				this.rand.setSeed(x, z);
 
-				surfaceProvider.getSurface(x, height, z).replaceSurfaceBlocks(chunkRegion, chunk, this.rand, x, z, blockNoise.sample(x, z));
+				this.surfaceProvider.getSurface(x, height, z).replaceSurfaceBlocks(chunkRegion, chunk, this.rand, x, z, this.blockNoise.sample(x, z));
 			}
 		}
 	}
@@ -107,7 +111,7 @@ public class WorldCometChunkGenerator extends ChunkGenerator<WorldCometChunkGene
 								BlockState toSet = AIR;
 								if (y < height) {
 									toSet = STONE;
-								} else if (y < seaLevel) {
+								} else if (y < this.seaLevel) {
 									toSet = WATER;
 								}
 
@@ -140,17 +144,37 @@ public class WorldCometChunkGenerator extends ChunkGenerator<WorldCometChunkGene
 
 		double[] result = new double[4];
 
-		result[0] = depthmap.sample(x1, subChunkY, z1);
-		result[1] = depthmap.sample(x1, subChunkY, z2);
-		result[2] = depthmap.sample(x2, subChunkY, z1);
-		result[3] = depthmap.sample(x2, subChunkY, z2);
+		result[0] = this.depthmap.sample(x1, subChunkY, z1);
+		result[1] = this.depthmap.sample(x1, subChunkY, z2);
+		result[2] = this.depthmap.sample(x2, subChunkY, z1);
+		result[3] = this.depthmap.sample(x2, subChunkY, z2);
 
 		return result;
 	}
 
 	@Override
 	public int getHeightOnGround(int x, int z, Type heightmapType) {
-		// TODO Auto-generated method stub
-		return 0;
+		// TODO actually do this properly
+		return this.seaLevel + 5;
+	}
+
+	@Override
+	public void generateFeatures(ChunkRegion region) {
+		int chunkX = region.getCenterChunkX();
+		int chunkZ = region.getCenterChunkZ();
+
+		this.rand.setSeed(this.seed);
+		
+		this.worldDecorator.decorators.forEach(decorator -> decorator.decorateChunk(region, this.rand, chunkX, chunkZ, this.seed));
+	}
+
+	@Override
+	public int getHeightForXZ(int x, int z) {
+		return this.getHeightOnGround(x, z, Heightmap.Type.WORLD_SURFACE_WG);
+	}
+
+	@Override
+	public Surface getSurface(int x, int z, int height) {
+		return this.surfaceProvider.getSurface(x, z, height);
 	}
 }

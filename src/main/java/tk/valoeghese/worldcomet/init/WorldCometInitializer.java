@@ -6,10 +6,7 @@ import net.minecraft.util.Identifier;
 public class WorldCometInitializer implements ModInitializer {
 	@Override
 	public void onInitialize() {
-		testMod();
-	}
-	
-	public void testMod() {
+		TestMod.init();
 	}
 	
 	public static final Identifier from(String id) {

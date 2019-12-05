@@ -12,7 +12,7 @@ import net.minecraft.world.dimension.OverworldDimension;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
 import net.minecraft.world.level.LevelGeneratorType;
-import tk.valoeghese.worldcomet.impl.type.WorldCometLevelGeneratorType;
+import tk.valoeghese.worldcomet.impl.type.WorldType;
 
 @Mixin(OverworldDimension.class)
 public abstract class OverworldDimensionMixin extends Dimension {
@@ -24,8 +24,8 @@ public abstract class OverworldDimensionMixin extends Dimension {
 	public void createChunkGenerator(CallbackInfoReturnable<ChunkGenerator<? extends ChunkGeneratorConfig>> info) {
 		LevelGeneratorType type = this.world.getLevelProperties().getGeneratorType();
 
-		if(WorldCometLevelGeneratorType.LGT_TO_WT_MAP.containsKey(type)) {
-			WorldCometLevelGeneratorType<?> worldType = WorldCometLevelGeneratorType.LGT_TO_WT_MAP.get(type);
+		if(WorldType.LGT_TO_WT_MAP.containsKey(type)) {
+			WorldType<?> worldType = WorldType.LGT_TO_WT_MAP.get(type);
 			info.setReturnValue(
 				worldType.chunkGenSupplier.create(this.world)
 			);

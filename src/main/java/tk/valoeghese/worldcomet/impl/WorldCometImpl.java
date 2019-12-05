@@ -1,7 +1,5 @@
 package tk.valoeghese.worldcomet.impl;
 
-import java.util.Collection;
-
 import tk.valoeghese.worldcomet.api.terrain.Depthmap.DepthmapFunction;
 import tk.valoeghese.worldcomet.api.terrain.Depthmap.HeightmapFunction;
 import tk.valoeghese.worldcomet.impl.gen.WorldCometChunkGeneratorConfig;
@@ -12,8 +10,8 @@ public final class WorldCometImpl {
 	private WorldCometImpl() {
 	}
 	
-	public static WorldCometChunkGeneratorType createChunkGeneratorType(final WorldCometChunkGeneratorConfig generator) {
-		return new WorldCometChunkGeneratorType(() -> generator);
+	public static WorldCometChunkGeneratorType createChunkGeneratorType(final WorldCometChunkGeneratorConfig config) {
+		return new WorldCometChunkGeneratorType(config);
 	}
 
 	public static double sampleDepthmap(int noiseGenX, int noiseGenY, int noiseGenZ, Iterable<HeightmapFunction> heightmaps, Iterable<DepthmapFunction> depthmaps) {
