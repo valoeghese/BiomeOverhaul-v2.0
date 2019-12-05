@@ -1,4 +1,4 @@
-package tk.valoeghese.worldcomet.init;
+package tk.valoeghese.worldcomettest;
 
 import tk.valoeghese.worldcomet.impl.gen.WorldCometChunkGeneratorType;
 
