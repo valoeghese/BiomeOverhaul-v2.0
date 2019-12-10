@@ -59,7 +59,7 @@ public class WorldCometChunkGenerator extends ChunkGenerator<WorldCometChunkGene
 			int x = localX + startX;
 			for (int localZ = 0; localZ < 16; ++localZ) {
 				int z = localZ + startZ;
-				int height = chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE_WG, x, z) + 1;
+				int height = chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE_WG, localX, localZ) + 1;
 
 				this.rand.setSeed(x, z);
 
@@ -164,8 +164,8 @@ public class WorldCometChunkGenerator extends ChunkGenerator<WorldCometChunkGene
 		int chunkZ = region.getCenterChunkZ();
 
 		this.rand.setSeed(this.seed);
-		
-		this.worldDecorator.decorators.forEach(decorator -> decorator.decorateChunk(region, this.rand, chunkX, chunkZ, this.seed));
+
+		this.worldDecorator.decorators.forEach(decorator -> decorator.decorateChunk(region, this.rand, chunkX, chunkZ, this.surfaceProvider, this.seed));
 	}
 
 	@Override

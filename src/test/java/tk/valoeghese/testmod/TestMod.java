@@ -1,4 +1,4 @@
-package tk.valoeghese.worldcomettest;
+package tk.valoeghese.testmod;
 
 import net.fabricmc.api.ModInitializer;
 import tk.valoeghese.worldcomet.impl.gen.WorldCometChunkGeneratorType;

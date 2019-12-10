@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "id": "worldcomet",
-  "version": "1.0.0",
+  "id": "worldcomettest",
+  "version": "2.0.0",
   
   "name": "WorldComet API",
   "description": "API for custom world types",
@@ -25,6 +25,6 @@
   },
   
   "mixins": [
-    "worldcomet.mixins.json"
+    "worldcomettest.mixins.json"
   ]
 }
