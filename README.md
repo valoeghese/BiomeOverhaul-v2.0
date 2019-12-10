@@ -1,1 +1,1 @@
-# BiomeOverhaul 2.0
+# WorldComet API
