@@ -7,7 +7,7 @@ public interface SurfaceProvider {
 	Surface getSurface(int x, int z, int height);
 
 	/**
-	 * Takes in noiseGenX, noiseGenY, and noiseGenZ [x >> 2, y >> 4, z >> 2] and returns the surface for generation.
+	 * Takes in noiseGenX, noiseGenY, and noiseGenZ [x >> 2, y >> 3, z >> 2] and returns the surface for generation.
 	 * <p/>
 	 * This may not be neccesary for every mod, as some mods will not use surfaces in shaping terrain.
 	 * 

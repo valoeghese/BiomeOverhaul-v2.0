@@ -1,4 +1,4 @@
-package tk.valoeghese.worldcomet.util;
+package tk.valoeghese.worldcomet.api.noise;
 
 import java.util.Random;
 

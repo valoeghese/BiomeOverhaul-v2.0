@@ -12,11 +12,11 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import tk.valoeghese.worldcomet.api.decoration.WorldDecorator;
+import tk.valoeghese.worldcomet.api.noise.OctaveOpenSimplexNoise;
 import tk.valoeghese.worldcomet.api.surface.Surface;
 import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 import tk.valoeghese.worldcomet.api.terrain.Depthmap;
 import tk.valoeghese.worldcomet.api.terrain.GeneratorSettings;
-import tk.valoeghese.worldcomet.util.OctaveOpenSimplexNoise;
 
 public class WorldCometChunkGenerator extends ChunkGenerator<WorldCometChunkGeneratorConfig> implements WorldBiomeManager {
 	private final OctaveOpenSimplexNoise blockNoise;
@@ -47,7 +47,7 @@ public class WorldCometChunkGenerator extends ChunkGenerator<WorldCometChunkGene
 	}
 
 	public int getSeaLevel() {
-		return seaLevel;
+		return this.seaLevel;
 	}
 
 	@Override
@@ -83,11 +83,11 @@ public class WorldCometChunkGenerator extends ChunkGenerator<WorldCometChunkGene
 				for (int subChunkY = 0; subChunkY < 32; ++subChunkY) {
 					for (int localX = 0; localX < 4; ++localX) {
 						pos.setX((subChunkX << 2) + localX);
-						double deltaX = (double) localX / 4.0;
+						double deltaX = fade((double) localX / 4.0);
 
 						for (int localZ = 0; localZ < 4; ++localZ) {
 							pos.setZ((subChunkZ << 2) + localZ);
-							double deltaZ = (double) localZ / 4.0;
+							double deltaZ = fade((double) localZ / 4.0);
 
 							// start interpolation
 							// nw = 0, sw = 1, ne = 2, se = 3
@@ -105,7 +105,7 @@ public class WorldCometChunkGenerator extends ChunkGenerator<WorldCometChunkGene
 								int y = (subChunkY << 3) + localY;
 								pos.setY(y);
 
-								double deltaY = (double) localY / 8.0;
+								double deltaY = fade((double) localY / 8.0);
 								double height = lerp(deltaY, lowVal, highVal);
 
 								BlockState toSet = AIR;
@@ -133,6 +133,10 @@ public class WorldCometChunkGenerator extends ChunkGenerator<WorldCometChunkGene
 
 	private static double lerp(double delta, double low, double high) {
 		return low + delta * (high - low);
+	}
+
+	private static double fade(double value) {
+		return value * value * (3 - (value * 2));
 	}
 
 	private double[] sampleNoise(int subChunkX, int subChunkZ, int chunkX, int chunkZ, int subChunkY) {
