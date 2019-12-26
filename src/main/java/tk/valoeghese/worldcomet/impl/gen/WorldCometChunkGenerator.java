@@ -1,5 +1,7 @@
 package tk.valoeghese.worldcomet.impl.gen;
 
+import java.util.function.Predicate;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -18,14 +20,15 @@ import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 import tk.valoeghese.worldcomet.api.terrain.Depthmap;
 import tk.valoeghese.worldcomet.api.terrain.GeneratorSettings;
 
+// Protected fields in case a modder wishes to extend functionality
 public class WorldCometChunkGenerator extends ChunkGenerator<WorldCometChunkGeneratorConfig> implements WorldBiomeManager {
-	private final OctaveOpenSimplexNoise blockNoise;
-	private final ChunkRandom rand;
+	protected final OctaveOpenSimplexNoise blockNoise;
+	protected final ChunkRandom rand;
 
-	private final int seaLevel;
-	private final Depthmap depthmap;
-	private final SurfaceProvider surfaceProvider;
-	private final WorldDecorator worldDecorator;
+	protected final int seaLevel;
+	protected final Depthmap depthmap;
+	protected final SurfaceProvider surfaceProvider;
+	protected final WorldDecorator worldDecorator;
 
 	public WorldCometChunkGenerator(IWorld world, BiomeSource source, WorldCometChunkGeneratorConfig config) {
 		super(world, source, config);
@@ -158,8 +161,67 @@ public class WorldCometChunkGenerator extends ChunkGenerator<WorldCometChunkGene
 
 	@Override
 	public int getHeightOnGround(int x, int z, Type heightmapType) {
-		// TODO actually do this properly
-		return this.seaLevel + 5;
+		final Predicate<BlockState> blockPredicate = heightmapType.getBlockPredicate();
+
+		int chunkX = (x >> 4);
+		int chunkZ = (z >> 4);
+		int targetX = (x - (chunkX << 4));
+		int targetZ = (z - (chunkZ << 4));
+		int subChunkX = (targetX >> 2);
+		int subChunkZ = (targetZ >> 2);
+		int localX = targetX - (subChunkX << 2);
+		int localZ = targetZ - (subChunkZ << 2);
+
+		int result = 0;
+
+		BlockPos.Mutable pos = new BlockPos.Mutable();
+
+		double[] low = sampleNoise(subChunkX, subChunkX, chunkX, chunkZ, 0);
+		double[] high = sampleNoise(subChunkX, subChunkX, chunkX, chunkZ, 1);
+
+		for (int subChunkY = 0; subChunkY < 32; ++subChunkY) {
+			pos.setX((subChunkX << 2) + localX);
+			pos.setZ((subChunkZ << 2) + localZ);
+
+			double deltaX = fade((double) localX / 4.0);
+			double deltaZ = fade((double) localZ / 4.0);
+
+			// start interpolation
+			// nw = 0, sw = 1, ne = 2, se = 3
+			double lowVal = lerp(
+					deltaZ,
+					lerp(deltaX, low[0], low[2]),
+					lerp(deltaX, low[1], low[3]));
+
+			double highVal = lerp(
+					deltaZ,
+					lerp(deltaX, high[0], high[2]),
+					lerp(deltaX, high[1], high[3]));
+
+			for (int localY = 0; localY < 8; ++localY) {
+				int y = (subChunkY << 3) + localY;
+				pos.setY(y);
+
+				double deltaY = fade((double) localY / 8.0);
+				double height = lerp(deltaY, lowVal, highVal);
+
+				BlockState toSet = AIR;
+				if (y < height) {
+					toSet = STONE;
+				} else if (y < this.seaLevel) {
+					toSet = WATER;
+				}
+
+				if (blockPredicate.test(toSet)) {
+					result = y;
+				}
+			}
+
+			low = high;
+			high = sampleNoise(subChunkX, subChunkZ, chunkX, chunkZ, subChunkY);
+		}
+
+		return result;
 	}
 
 	@Override
@@ -169,7 +231,7 @@ public class WorldCometChunkGenerator extends ChunkGenerator<WorldCometChunkGene
 
 		this.rand.setSeed(this.seed);
 
-		this.worldDecorator.decorators.forEach(decorator -> decorator.decorateChunk(region, this.rand, chunkX, chunkZ, this.surfaceProvider, this.seed));
+		this.worldDecorator.decorateChunk(region, this, this.rand, chunkX, chunkZ, this.surfaceProvider, chunkZ);
 	}
 
 	@Override

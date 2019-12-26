@@ -18,7 +18,7 @@ public final class WorldCometImpl {
 	}
 
 	public static double sampleDepthmap(int noiseGenX, int noiseGenY, int noiseGenZ, Iterable<HeightmapFunction> heightmaps, Iterable<DepthmapFunction> depthmaps, Iterable<SurfaceDepthmapFunction> surfaceDepthmaps, SurfaceProvider surfaceProvider) {
-		Surface surface = surfaceProvider.getSurfaceForNoiseGen(noiseGenX, noiseGenY, noiseGenZ);
+		Surface surface = surfaceProvider.getSurfaceForGeneration(noiseGenX, noiseGenY, noiseGenZ);
 
 		double result = FunctionalUtils.accumulate(heightmaps, map -> map.getHeight(noiseGenX, noiseGenZ));
 		result += FunctionalUtils.accumulate(depthmaps, map -> map.getHeight(noiseGenX, noiseGenY, noiseGenZ));
@@ -42,7 +42,7 @@ class NoneSurfaceProvider implements SurfaceProvider {
 	}
 
 	@Override
-	public Surface getSurfaceForNoiseGen(int noiseGenX, int noiseGenY, int noiseGenZ) {
+	public Surface getSurfaceForGeneration(int noiseGenX, int noiseGenY, int noiseGenZ) {
 		return Surface.DEFAULT;
 	}
 }
