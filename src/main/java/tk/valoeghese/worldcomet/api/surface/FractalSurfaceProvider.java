@@ -29,7 +29,8 @@ public class FractalSurfaceProvider implements SurfaceProvider {
 		private FactoryBuilder() {
 			
 		}
-		// TODO
+		// TODO probably make the function decided via height layers
+		// TODO so ranges decide the layer (from layer builder) to sample from
 		
 		public LongFunction<FractalSurfaceProvider> buildFactory() {
 			return seed -> new FractalSurfaceProvider(seed);
