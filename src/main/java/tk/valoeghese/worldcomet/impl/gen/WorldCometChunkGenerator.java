@@ -35,8 +35,8 @@ public class WorldCometChunkGenerator extends ChunkGenerator<WorldCometChunkGene
 		this.rand = new ChunkRandom(this.seed);
 		this.blockNoise = new OctaveOpenSimplexNoise(this.rand, 6, 1D, 1D, 0.05D);
 
-		this.depthmap = config.depthmapFactory.apply(this.seed);
 		this.surfaceProvider = config.providerFactory.apply(this.seed);
+		this.depthmap = config.depthmapFactory.apply(this.seed).setSurfaceProvider(this.surfaceProvider);;
 		this.worldDecorator = config.worldDecorator;
 
 		this.seaLevel = settings.seaLevel;
@@ -121,7 +121,7 @@ public class WorldCometChunkGenerator extends ChunkGenerator<WorldCometChunkGene
 					}
 
 					low = high;
-					high = sampleNoise(subChunkX, subChunkX, chunkX, chunkZ, subChunkY + 2);
+					high = sampleNoise(subChunkX, subChunkZ, chunkX, chunkZ, subChunkY);
 				}
 			}
 		}
