@@ -1,7 +1,11 @@
 package tk.valoeghese.worldcomet.api.surface.fractal;
 
+import java.util.Map;
+import java.util.function.IntFunction;
 import java.util.function.LongFunction;
 
+import net.minecraft.world.biome.layer.util.CachingLayerSampler;
+import net.minecraft.world.biome.layer.util.LayerFactory;
 import tk.valoeghese.worldcomet.api.surface.Surface;
 import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 import tk.valoeghese.worldcomet.impl.VoronoiSurfaceAccess;
@@ -9,7 +13,7 @@ import tk.valoeghese.worldcomet.impl.VoronoiSurfaceAccess;
 public class FractalSurfaceProvider implements SurfaceProvider {
 	private final VoronoiSurfaceAccess voronoiAccess;
 
-	private FractalSurfaceProvider(long seed) {
+	public FractalSurfaceProvider(long seed, FractalLayerProvider sample) {
 		this.voronoiAccess = new VoronoiSurfaceAccess(this, seed);
 	}
 
@@ -23,23 +27,28 @@ public class FractalSurfaceProvider implements SurfaceProvider {
 		return this.getFractalSurface(genX, genZ, genY << 3);
 	}
 
-	public static FactoryBuilder factoryBuilder(SurfaceProviderFractal defaultFractal) {
+	public static FactoryBuilder factoryBuilder(FractalLongFunction defaultFractal) {
 		return new FactoryBuilder(defaultFractal);
 	}
 
+	public Surface getFractalSurface(int genX, int genZ, int height) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public static class FactoryBuilder {
-		private FactoryBuilder(SurfaceProviderFractal defaultFractal) {
+		final FractalLongFunction defaultFractal;
+		final Map<String, FractalLongFunction> functionNameMap = new HashMap<>();
+		//TODO layerNameMap. these two maps allow creating height layer functions easily
+
+		private FactoryBuilder(FractalLongFunction defaultFractal) {
 		}
-		// TODO probably make the function decided via height layers
-		// TODO so ranges decide the layer (from layer builder) to sample from
 
 		public LongFunction<FractalSurfaceProvider> buildFactory() {
 			return seed -> new FractalSurfaceProvider(seed);
 		}
 	}
 
-	public Surface getFractalSurface(int genX, int genZ, int height) {
-		// TODO Auto-generated method stub
-		return null;
+	public static interface FractalLayerProvider extends IntFunction<LayerFactory<CachingLayerSampler>> {
 	}
 }
