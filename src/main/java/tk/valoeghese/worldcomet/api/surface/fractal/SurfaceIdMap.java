@@ -1,9 +1,10 @@
-package tk.valoeghese.worldcomet.api.surface;
+package tk.valoeghese.worldcomet.api.surface.fractal;
 
 import java.util.function.IntFunction;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import tk.valoeghese.worldcomet.api.surface.Surface;
 
 public final class SurfaceIdMap {
 	private SurfaceIdMap(Int2ObjectMap<Surface> idMap, Surface defaultSurface) {

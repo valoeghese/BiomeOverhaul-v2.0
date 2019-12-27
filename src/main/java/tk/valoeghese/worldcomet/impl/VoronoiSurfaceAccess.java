@@ -1,8 +1,8 @@
 package tk.valoeghese.worldcomet.impl;
 
 import net.minecraft.world.biome.source.SeedMixer;
-import tk.valoeghese.worldcomet.api.surface.FractalSurfaceProvider;
 import tk.valoeghese.worldcomet.api.surface.Surface;
+import tk.valoeghese.worldcomet.api.surface.fractal.FractalSurfaceProvider;
 
 public final class VoronoiSurfaceAccess {
 	private final FractalSurfaceProvider surfaceProvider;

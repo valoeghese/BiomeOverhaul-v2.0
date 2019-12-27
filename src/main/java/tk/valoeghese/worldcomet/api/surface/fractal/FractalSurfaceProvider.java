@@ -1,7 +1,9 @@
-package tk.valoeghese.worldcomet.api.surface;
+package tk.valoeghese.worldcomet.api.surface.fractal;
 
 import java.util.function.LongFunction;
 
+import tk.valoeghese.worldcomet.api.surface.Surface;
+import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 import tk.valoeghese.worldcomet.impl.VoronoiSurfaceAccess;
 
 public class FractalSurfaceProvider implements SurfaceProvider {
@@ -21,17 +23,16 @@ public class FractalSurfaceProvider implements SurfaceProvider {
 		return this.getFractalSurface(genX, genZ, genY << 3);
 	}
 
-	public static FactoryBuilder factoryBuilder() {
-		return new FactoryBuilder();
+	public static FactoryBuilder factoryBuilder(SurfaceProviderFractal defaultFractal) {
+		return new FactoryBuilder(defaultFractal);
 	}
-	
+
 	public static class FactoryBuilder {
-		private FactoryBuilder() {
-			
+		private FactoryBuilder(SurfaceProviderFractal defaultFractal) {
 		}
 		// TODO probably make the function decided via height layers
 		// TODO so ranges decide the layer (from layer builder) to sample from
-		
+
 		public LongFunction<FractalSurfaceProvider> buildFactory() {
 			return seed -> new FractalSurfaceProvider(seed);
 		}
