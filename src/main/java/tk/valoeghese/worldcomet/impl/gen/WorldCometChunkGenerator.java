@@ -36,7 +36,7 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 		GeneratorSettings settings = config.settings;
 
 		this.rand = new ChunkRandom(this.seed);
-		this.blockNoise = new OctaveOpenSimplexNoise(this.rand, 6, 1D, 1D, 0.05D);
+		this.blockNoise = new OctaveOpenSimplexNoise(this.rand, 2, 48D);
 
 		this.surfaceProvider = config.providerFactory.apply(this.seed);
 		this.depthmap = config.depthmapFactory.apply(this.seed).setSurfaceProvider(this.surfaceProvider);;

@@ -7,9 +7,9 @@ import com.google.common.collect.ImmutableSet;
 
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.world.biome.Biomes;
+import tk.valoeghese.testmod.surface.DesertSurface;
 import tk.valoeghese.worldcomet.api.WorldCometApi;
 import tk.valoeghese.worldcomet.api.decoration.WorldDecorator;
-import tk.valoeghese.worldcomet.api.noise.NoiseProvider;
 import tk.valoeghese.worldcomet.api.noise.OctaveOpenSimplexNoise;
 import tk.valoeghese.worldcomet.api.surface.Surface;
 import tk.valoeghese.worldcomet.api.surface.fractal.FractalLongFunction;
@@ -30,24 +30,27 @@ public class TestMod implements ModInitializer {
 		System.out.println("Initialising WorldComet test mod!");
 
 		GeneratorSettings settings = GeneratorSettings.builder()
-				.seaLevel(39)
+				.seaLevel(50)
 				.build();
 
-		NoiseProvider<OctaveOpenSimplexNoise> mainNoise = NoiseProvider.createCaching(seed -> new OctaveOpenSimplexNoise(
-				new Random(seed),
-				3,
-				100.0,
-				50.0,
-				20.0), 3);
-
 		LongFunction<Depthmap> depthmapFactory = seed -> Depthmap.builder()
-				.baseHeight(40)
-				.addHeightmap(mainNoise.apply(seed)::sample)
+				.baseHeight(60)
+				.addHeightmap(new OctaveOpenSimplexNoise(
+						new Random(seed),
+						3,
+						100.0,
+						50.0,
+						20.0)::sample)
+				.addDepthmap(new OctaveOpenSimplexNoise(
+						new Random(seed),
+						1,
+						30.0,
+						10.0)::sample)
 				.build();
 
 		SurfaceIdMap surfaceIdMap = SurfaceIdMap.builder()
 				.mapId(0, Surface.DEFAULT)
-				.mapId(1, Surface.DEFAULT)
+				.mapId(1, new DesertSurface())
 				.build();
 
 		LongFunction<FractalSurfaceProvider> surfaceProviderFactory = FractalSurfaceProvider.factoryBuilder(FractalLongFunction.builder((r, x, z) -> 0)

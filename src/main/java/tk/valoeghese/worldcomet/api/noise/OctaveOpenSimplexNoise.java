@@ -11,6 +11,10 @@ public final class OctaveOpenSimplexNoise implements Noise {
 		this(rand, octaves, spread, 1, 1);
 	}
 
+	public OctaveOpenSimplexNoise(Random rand, int octaves, double spread, double amplitude) {
+		this(rand, octaves, spread, amplitude, amplitude);
+	}
+
 	public OctaveOpenSimplexNoise(Random rand, int octaves, double spread, double amplitudeHigh, double amplitudeLow) {
 		samplers = new OpenSimplexNoise[octaves];
 		clamp = 1D / (1D - (1D / Math.pow(2, octaves)));

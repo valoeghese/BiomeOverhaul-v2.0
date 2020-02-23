@@ -13,12 +13,8 @@ import net.minecraft.world.chunk.Chunk;
 import tk.valoeghese.worldcomet.impl.NamespacedRegistry;
 
 public class Surface {
-	protected static final BlockState AIR = Blocks.AIR.getDefaultState();
-	protected static final BlockState WATER = Blocks.WATER.getDefaultState();
-	protected static final BlockState STONE = Blocks.STONE.getDefaultState();
-
-	protected BlockState topBlock = Blocks.GRASS_BLOCK.getDefaultState();
-	protected BlockState underBlock = Blocks.DIRT.getDefaultState();
+	protected BlockState topBlock = GRASS_BLOCK;
+	protected BlockState underBlock = DIRT;
 	protected BlockState underwaterBlock = Blocks.GRAVEL.getDefaultState();
 
 	public Surface(String id) {
@@ -55,18 +51,25 @@ public class Surface {
 			} else if (currentState == STONE) {
 				if (run < 5) {
 					if (water) {
-						chunk.setBlockState(pos, underwaterBlock, false);
+						chunk.setBlockState(pos, this.underwaterBlock, false);
 					} else {
 						if (run == 0) {
-							chunk.setBlockState(pos, topBlock, false);
+							chunk.setBlockState(pos, this.topBlock, false);
 						} else {
-							chunk.setBlockState(pos, underBlock, false);
+							chunk.setBlockState(pos, this.underBlock, false);
 						}
 					}
 				}
 			}
 		}
 	}
+
+	protected static final BlockState AIR = Blocks.AIR.getDefaultState();
+	protected static final BlockState WATER = Blocks.WATER.getDefaultState();
+	protected static final BlockState STONE = Blocks.STONE.getDefaultState();
+	protected static final BlockState SAND = Blocks.SAND.getDefaultState();
+	protected static final BlockState GRASS_BLOCK = Blocks.GRASS_BLOCK.getDefaultState();
+	protected static final BlockState DIRT = Blocks.DIRT.getDefaultState();
 
 	public static final Surface DEFAULT = new Surface("default");
 }
