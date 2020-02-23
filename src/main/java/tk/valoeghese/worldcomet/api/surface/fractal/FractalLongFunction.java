@@ -3,6 +3,8 @@ package tk.valoeghese.worldcomet.api.surface.fractal;
 import java.util.function.LongFunction;
 
 import net.minecraft.world.biome.layer.ScaleLayer;
+import net.minecraft.world.biome.layer.type.CrossSamplingLayer;
+import net.minecraft.world.biome.layer.type.IdentitySamplingLayer;
 import net.minecraft.world.biome.layer.type.InitLayer;
 import net.minecraft.world.biome.layer.type.MergingLayer;
 import net.minecraft.world.biome.layer.type.ParentedLayer;
@@ -27,6 +29,14 @@ public interface FractalLongFunction extends LongFunction<LayerFactory<CachingLa
 			final FractalLongFunction previous = this.function;
 			this.function = seed -> layer.create(this.frw.getRandomSource(salt), previous.apply(seed));
 			return this;
+		}
+
+		public Builder stackDirectSampling(IdentitySamplingLayer layer, long salt) {
+			return this.stack(layer, salt);
+		}
+
+		public Builder stackCrossSampling(CrossSamplingLayer layer, long salt) {
+			return this.stack(layer, salt);
 		}
 
 		public Builder merge(MergingLayer layer, Builder second, long salt) {

@@ -3,11 +3,12 @@ package tk.valoeghese.worldcomet.impl.gen;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.gen.chunk.ChunkGeneratorType;
+import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 
-public class WorldCometChunkGeneratorType extends ChunkGeneratorType<WorldCometChunkGeneratorConfig, WorldCometChunkGenerator> {
-	private final WorldCometChunkGeneratorConfig config;
+public class WorldCometChunkGeneratorType<T extends SurfaceProvider> extends ChunkGeneratorType<WorldCometChunkGeneratorConfig<T>, WorldCometChunkGenerator<T>> {
+	private final WorldCometChunkGeneratorConfig<T> config;
 
-	public WorldCometChunkGeneratorType(WorldCometChunkGeneratorConfig config) {
+	public WorldCometChunkGeneratorType(WorldCometChunkGeneratorConfig<T> config) {
 		super(null, false, () -> config);
 
 		this.config = config;
@@ -18,7 +19,7 @@ public class WorldCometChunkGeneratorType extends ChunkGeneratorType<WorldCometC
 	}
 
 	@Override
-	public WorldCometChunkGenerator create(World world, BiomeSource biomeSource, WorldCometChunkGeneratorConfig config) {
-		return new WorldCometChunkGenerator(world, biomeSource, config == null ? this.config : config);
+	public WorldCometChunkGenerator<T> create(World world, BiomeSource biomeSource, WorldCometChunkGeneratorConfig<T> config) {
+		return new WorldCometChunkGenerator<>(world, biomeSource, config == null ? this.config : config);
 	}
 }

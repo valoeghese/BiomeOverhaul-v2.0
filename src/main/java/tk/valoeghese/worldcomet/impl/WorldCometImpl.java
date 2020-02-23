@@ -13,8 +13,8 @@ public final class WorldCometImpl {
 	private WorldCometImpl() {
 	}
 
-	public static WorldCometChunkGeneratorType createChunkGeneratorType(final WorldCometChunkGeneratorConfig config) {
-		return new WorldCometChunkGeneratorType(config);
+	public static <T extends SurfaceProvider> WorldCometChunkGeneratorType<T> createChunkGeneratorType(final WorldCometChunkGeneratorConfig<T> config) {
+		return new WorldCometChunkGeneratorType<>(config);
 	}
 
 	public static double sampleDepthmap(int noiseGenX, int noiseGenY, int noiseGenZ, Iterable<HeightmapFunction> heightmaps, Iterable<DepthmapFunction> depthmaps, Iterable<SurfaceDepthmapFunction> surfaceDepthmaps, SurfaceProvider surfaceProvider) {

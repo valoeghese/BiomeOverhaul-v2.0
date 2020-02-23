@@ -19,7 +19,11 @@ public final class WorldDecorator implements DecoratorBase {
 	public void decorateChunk(ChunkRegion world, ChunkGenerator<?> generator, Random rand, int chunkX, int chunkZ, SurfaceProvider surfaceProvider, long seed) {
 		this.decorators.forEach(decorator -> decorator.decorateChunk(world, generator, rand, chunkX, chunkZ, surfaceProvider, seed));
 	}
-	
+
+	public static Builder builder() {
+		return new Builder();
+	}
+
 	public static class Builder {
 		private final List<DecoratorBase> decorators = new ArrayList<>();
 

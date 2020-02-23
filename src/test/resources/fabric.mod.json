@@ -15,7 +15,7 @@
   
   "entrypoints": {
     "main": [
-       "tk.valoeghese.worldcomet.init.WorldCometInitializer"
+       "tk.valoeghese.testmod.TestMod"
     ]
   },
   

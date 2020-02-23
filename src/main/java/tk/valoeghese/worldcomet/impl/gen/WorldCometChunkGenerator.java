@@ -21,7 +21,7 @@ import tk.valoeghese.worldcomet.api.terrain.Depthmap;
 import tk.valoeghese.worldcomet.api.terrain.GeneratorSettings;
 
 // Protected fields in case a modder wishes to extend functionality
-public class WorldCometChunkGenerator extends ChunkGenerator<WorldCometChunkGeneratorConfig> implements WorldBiomeManager {
+public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGenerator<WorldCometChunkGeneratorConfig<T>> implements WorldBiomeManager {
 	protected final OctaveOpenSimplexNoise blockNoise;
 	protected final ChunkRandom rand;
 
@@ -30,7 +30,7 @@ public class WorldCometChunkGenerator extends ChunkGenerator<WorldCometChunkGene
 	protected final SurfaceProvider surfaceProvider;
 	protected final WorldDecorator worldDecorator;
 
-	public WorldCometChunkGenerator(IWorld world, BiomeSource source, WorldCometChunkGeneratorConfig config) {
+	public WorldCometChunkGenerator(IWorld world, BiomeSource source, WorldCometChunkGeneratorConfig<T> config) {
 		super(world, source, config);
 
 		GeneratorSettings settings = config.settings;

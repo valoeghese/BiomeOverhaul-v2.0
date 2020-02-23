@@ -32,6 +32,10 @@ public final class SurfaceIdMap {
 			return this;
 		}
 
+		public SurfaceIdMap build() {
+			return new SurfaceIdMap(this.idMap, Surface.DEFAULT);
+		}
+
 		public SurfaceIdMap build(Surface defaultSurface) {
 			return new SurfaceIdMap(this.idMap, defaultSurface);
 		}

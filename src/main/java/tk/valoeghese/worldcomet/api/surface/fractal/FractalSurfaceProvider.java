@@ -49,9 +49,13 @@ public class FractalSurfaceProvider implements SurfaceProvider {
 		return this.surfaceMappingFuntion.apply(this.sampler.apply(height).sample(genX, genZ));
 	}
 
+	/**
+	 * Builder for a fractal LongFunction<SurfaceProvider> which can be used in WorldCometApi#createChunkGenerator.
+	 * @author Valoeghese
+	 */
 	public static class FactoryBuilder {
-		private final FractalLongFunction defaultFractal;
-		private final Int2ObjectMap<FractalLongFunction> functionIdMap = new Int2ObjectArrayMap<>();
+		private final FractalLongFunction defaultFractal; // the default fractal, if the Height2FractalFunction returns null
+		private final Int2ObjectMap<FractalLongFunction> functionIdMap = new Int2ObjectArrayMap<>(); // other fractal long functions that could be determined by height
 
 		private FactoryBuilder(FractalLongFunction defaultFractal) {
 			this.defaultFractal = defaultFractal;
@@ -83,5 +87,7 @@ public class FractalSurfaceProvider implements SurfaceProvider {
 	
 	public static interface Height2FractalFunction {
 		int getFractalLookupId(int height);
+
+		public static final Height2FractalFunction ALWAYS_ZERO = i -> 0;
 	}
 }
