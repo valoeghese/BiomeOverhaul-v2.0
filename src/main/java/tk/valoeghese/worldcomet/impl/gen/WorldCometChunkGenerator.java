@@ -35,6 +35,10 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 
 		GeneratorSettings settings = config.settings;
 
+		if (source instanceof WorldCometBiomeSource) {
+			((WorldCometBiomeSource) source).setBiomeManager(this);
+		}
+
 		this.rand = new ChunkRandom(this.seed);
 		this.blockNoise = new OctaveOpenSimplexNoise(this.rand, 2, 48D);
 
@@ -57,6 +61,7 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 	public void buildSurface(ChunkRegion chunkRegion, Chunk chunk) {
 		int startX = chunk.getPos().getStartX();
 		int startZ = chunk.getPos().getStartZ();
+		this.rand.setSeed(startX, startZ);
 
 		for (int localX = 0; localX < 16; ++localX) {
 			int x = localX + startX;
@@ -64,9 +69,7 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 				int z = localZ + startZ;
 				int height = chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE_WG, localX, localZ) + 1;
 
-				this.rand.setSeed(x, z);
-
-				this.surfaceProvider.getSurface(x, height, z).replaceSurfaceBlocks(chunkRegion, chunk, this.rand, x, z, this.blockNoise.sample(x, z));
+				this.surfaceProvider.getSurface(x, z, height).replaceSurfaceBlocks(chunkRegion, chunk, this.rand, x, z, this.blockNoise.sample(x, z));
 			}
 		}
 	}

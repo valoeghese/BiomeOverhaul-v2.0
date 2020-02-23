@@ -4,10 +4,10 @@ import java.util.function.LongFunction;
 
 import net.minecraft.world.biome.layer.ScaleLayer;
 import net.minecraft.world.biome.layer.type.CrossSamplingLayer;
-import net.minecraft.world.biome.layer.type.IdentitySamplingLayer;
 import net.minecraft.world.biome.layer.type.InitLayer;
 import net.minecraft.world.biome.layer.type.MergingLayer;
 import net.minecraft.world.biome.layer.type.ParentedLayer;
+import net.minecraft.world.biome.layer.type.SouthEastSamplingLayer;
 import net.minecraft.world.biome.layer.util.CachingLayerContext;
 import net.minecraft.world.biome.layer.util.CachingLayerSampler;
 import net.minecraft.world.biome.layer.util.LayerFactory;
@@ -31,7 +31,7 @@ public interface FractalLongFunction extends LongFunction<LayerFactory<CachingLa
 			return this;
 		}
 
-		public Builder stackDirectSampling(IdentitySamplingLayer layer, long salt) {
+		public Builder stackDirectSampling(SouthEastSamplingLayer layer, long salt) {
 			return this.stack(layer, salt);
 		}
 

@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableSet;
 
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.biome.layer.SmoothenShorelineLayer;
 import tk.valoeghese.testmod.surface.DesertSurface;
 import tk.valoeghese.worldcomet.api.WorldCometApi;
 import tk.valoeghese.worldcomet.api.decoration.WorldDecorator;
@@ -56,6 +57,8 @@ public class TestMod implements ModInitializer {
 		LongFunction<FractalSurfaceProvider> surfaceProviderFactory = FractalSurfaceProvider.factoryBuilder(FractalLongFunction.builder((r, x, z) -> 0)
 				.scale(100L, 2)
 				.stackDirectSampling((rand, prev) -> rand.nextInt(3) == 0 ? 1 : prev, 1L)
+				.scale(1000L, 4)
+				.stack(SmoothenShorelineLayer.INSTANCE, 4L)
 				.build())
 				.buildFactory(Height2FractalFunction.ALWAYS_ZERO, surfaceIdMap);
 
