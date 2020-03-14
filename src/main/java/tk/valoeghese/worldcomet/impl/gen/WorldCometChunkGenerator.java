@@ -9,9 +9,11 @@ import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.Heightmap.Type;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkRandom;
+import net.minecraft.world.gen.GenerationStep.Carver;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import tk.valoeghese.worldcomet.api.decoration.WorldDecorator;
 import tk.valoeghese.worldcomet.api.noise.OctaveOpenSimplexNoise;
@@ -29,11 +31,13 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 	protected final Depthmap depthmap;
 	protected final SurfaceProvider surfaceProvider;
 	protected final WorldDecorator worldDecorator;
+	protected final boolean vanillaCarving;
 
 	public WorldCometChunkGenerator(IWorld world, BiomeSource source, WorldCometChunkGeneratorConfig<T> config) {
 		super(world, source, config);
 
 		GeneratorSettings settings = config.settings;
+		this.vanillaCarving = settings.vanillaCarving;
 
 		if (source instanceof WorldCometBiomeSource) {
 			((WorldCometBiomeSource) source).setBiomeManager(this);
@@ -47,6 +51,16 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 		this.worldDecorator = config.worldDecorator;
 
 		this.seaLevel = settings.seaLevel;
+	}
+
+	/**
+	 * Custom carving is recommended to be done as a {@link tk.valoeghese.worldcomet.api.decoration.Decorator decorator}
+	 */
+	@Override
+	public void carve(BiomeAccess biomeAccess, Chunk chunk, Carver carver) {
+		if (this.vanillaCarving) {
+			super.carve(biomeAccess, chunk, carver);
+		}
 	}
 
 	public int getSpawnHeight() {
