@@ -11,6 +11,7 @@ import net.minecraft.world.biome.layer.SmoothenShorelineLayer;
 import tk.valoeghese.testmod.decorator.CoolTreeDecorator;
 import tk.valoeghese.testmod.surface.DesertSurface;
 import tk.valoeghese.worldcomet.api.WorldCometApi;
+import tk.valoeghese.worldcomet.api.decoration.FeatureDecorator;
 import tk.valoeghese.worldcomet.api.decoration.WorldDecorator;
 import tk.valoeghese.worldcomet.api.noise.OctaveOpenSimplexNoise;
 import tk.valoeghese.worldcomet.api.surface.Surface;
@@ -64,6 +65,7 @@ public class TestMod implements ModInitializer {
 				.buildFactory(Height2FractalFunction.ALWAYS_ZERO, surfaceIdMap);
 
 		WorldDecorator decorator = WorldDecorator.builder()
+				.addDecorator(FeatureDecorator.STRONGHOLD)
 				.addDecorator(new CoolTreeDecorator())
 				.build();
 

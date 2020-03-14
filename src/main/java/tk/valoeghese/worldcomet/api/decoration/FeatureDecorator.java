@@ -9,6 +9,8 @@ import net.minecraft.world.gen.decorator.ConfiguredDecorator;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.DecoratedFeature;
 import net.minecraft.world.gen.feature.DecoratedFeatureConfig;
+import net.minecraft.world.gen.feature.DefaultFeatureConfig;
+import net.minecraft.world.gen.feature.Feature;
 import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 
 public final class FeatureDecorator implements DecoratorBase {
@@ -39,4 +41,6 @@ public final class FeatureDecorator implements DecoratorBase {
 	public static FeatureDecorator of(DecoratedFeature feature, DecoratedFeatureConfig config) {
 		return new FeatureDecorator(feature.configure(config));
 	}
+
+	public static final FeatureDecorator STRONGHOLD = new FeatureDecorator(Feature.STRONGHOLD.configure(new DefaultFeatureConfig()));
 }
