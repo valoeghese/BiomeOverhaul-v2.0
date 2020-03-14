@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableSet;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.biome.layer.SmoothenShorelineLayer;
+import tk.valoeghese.testmod.decorator.CoolTreeDecorator;
 import tk.valoeghese.testmod.surface.DesertSurface;
 import tk.valoeghese.worldcomet.api.WorldCometApi;
 import tk.valoeghese.worldcomet.api.decoration.WorldDecorator;
@@ -63,6 +64,7 @@ public class TestMod implements ModInitializer {
 				.buildFactory(Height2FractalFunction.ALWAYS_ZERO, surfaceIdMap);
 
 		WorldDecorator decorator = WorldDecorator.builder()
+				.addDecorator(new CoolTreeDecorator())
 				.build();
 
 		cgt = WorldCometApi.createChunkGeneratorType(settings, depthmapFactory, surfaceProviderFactory, decorator);

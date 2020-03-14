@@ -232,7 +232,7 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 		int chunkX = region.getCenterChunkX();
 		int chunkZ = region.getCenterChunkZ();
 
-		this.rand.setSeed(this.seed);
+		this.rand.setSeed(this.seed + 8526167 * chunkX - 935177 * chunkZ);
 
 		this.worldDecorator.decorateChunk(region, this, this.rand, chunkX, chunkZ, this.surfaceProvider, chunkZ);
 	}
