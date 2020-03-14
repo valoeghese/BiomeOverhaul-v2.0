@@ -9,6 +9,7 @@ import tk.valoeghese.worldcomet.api.decoration.SurfaceDecorator;
 import tk.valoeghese.worldcomet.api.surface.Surface;
 import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 
+// The leaves decay but I can't be bothered to fix it
 public class CoolTreeDecorator extends SurfaceDecorator {
 	@Override
 	protected int getCount(Random rand, SurfaceProvider surfaceProvider, int chunkX, int chunkZ) {
