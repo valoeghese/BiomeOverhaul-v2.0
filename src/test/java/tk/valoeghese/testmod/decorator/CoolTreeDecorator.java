@@ -4,47 +4,24 @@ import java.util.Random;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Heightmap;
 import net.minecraft.world.IWorld;
-import tk.valoeghese.worldcomet.api.decoration.Decorator;
+import tk.valoeghese.worldcomet.api.decoration.SurfaceDecorator;
 import tk.valoeghese.worldcomet.api.surface.Surface;
 import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 
-public class CoolTreeDecorator extends Decorator {
+public class CoolTreeDecorator extends SurfaceDecorator {
 	@Override
-	protected void decorateChunk(IWorld world, Random rand, int chunkX, int chunkZ, SurfaceProvider surfaceProvider, long seed) {
-		int chunkStartX = chunkX << 4;
-		int chunkStartZ = chunkZ << 4;
-
-		Heightmap heightMap = world.getChunk(chunkX, chunkZ).getHeightmap(Heightmap.Type.WORLD_SURFACE);
-
-		int count = rand.nextInt(3);
-		int fails = 0;
-		while (count --> 0) {
-			int
-			xo = rand.nextInt(16),
-			zo = rand.nextInt(16);
-
-			int
-			startX = chunkStartX + xo,
-			startZ = chunkStartZ + zo,
-			height = heightMap.get(xo, zo);
-
-			if (!generateCoolTree(world, surfaceProvider, rand.nextInt(5) + 1, startX, height + 1, startZ)) {
-				count++;
-				fails++;
-			}
-
-			if (fails > 2) { // if it fails three times, return
-				return;
-			}
-		}
+	protected int getCount(Random rand, SurfaceProvider surfaceProvider, int chunkX, int chunkZ) {
+		return rand.nextInt(3);
 	}
 
-	private boolean generateCoolTree(IWorld world, SurfaceProvider surfaceProvider, int height, int x, int y, int z) {
+	@Override
+	protected boolean generate(IWorld world, Random rand, SurfaceProvider surfaceProvider, int x, int y, int z) {
 		if (surfaceProvider.getSurface(x, z, y - 1) != Surface.DEFAULT) {
 			return false;
 		}
+
+		int height = rand.nextInt(5) + 5;
 
 		if (y + height > 254) {
 			return false;
@@ -54,7 +31,7 @@ public class CoolTreeDecorator extends Decorator {
 
 		for (int yo = 1; yo < height; ++yo) {
 			pos.setY(y + yo);
-			int width = height - yo + 1 + ((yo & 1) == 1 ? 2 : 0);
+			int width = 1 + (height - yo + 1 + ((yo & 1) == 1 ? 2 : 0)) / 2;
 
 			for (int xo = -width; xo <= width; ++xo) {
 				pos.setX(x + xo);
