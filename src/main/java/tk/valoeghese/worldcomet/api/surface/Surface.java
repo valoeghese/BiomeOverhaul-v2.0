@@ -13,13 +13,9 @@ import net.minecraft.world.chunk.Chunk;
 import tk.valoeghese.worldcomet.impl.NamespacedRegistry;
 
 /**
- * Class which controls the initial block replacing of the surface of the chunk. i.e. adding the bedrock floor, top block (often grass), under block (often dirt), and other relevant blocks.
+ * Class which controls the initial block replacement of the surface of the chunk. i.e. adding the bedrock floor, top block (often grass), under block (often dirt), and other relevant blocks.
  */
 public class Surface {
-	protected BlockState topBlock = GRASS_BLOCK;
-	protected BlockState underBlock = DIRT;
-	protected BlockState underwaterBlock = Blocks.GRAVEL.getDefaultState();
-
 	public Surface(String id) {
 		this(new Identifier(id));
 	}
@@ -28,10 +24,36 @@ public class Surface {
 		NamespacedRegistry.register(NamespacedRegistry.SURFACE, id, this);
 	}
 
+	/**
+	 * The block to generate at the surface.
+	 */
+	protected BlockState topBlock = GRASS_BLOCK;
+	/**
+	 * The block to generate between the surface and the stone.
+	 */
+	protected BlockState underBlock = DIRT;
+	/**
+	 * The block to replace the top block and under block when underwater.
+	 */
+	protected BlockState underwaterBlock = Blocks.GRAVEL.getDefaultState();
+
+	/**
+	 * @param surfaceHeight get the biome this surface represents per the height at that point.
+	 * @return
+	 */
 	public Biome getBiome(int surfaceHeight) {
 		return Biomes.PLAINS;
 	}
 
+	/**
+	 * Replaces the stone, air, and water base of the world with surface blocks such as grass, dirt, sand, and gravel.
+	 * @param world the chunk region representing the area of the world this in which this is generating. Use this to get world properties.
+	 * @param chunk the chunk in which to replace surface blocks. Use {@link Chunk#setBlockState} and {@link Chunk#getBlockState} to get and modify blocks in this method.
+	 * @param rand the pseudorandom number generator for generation
+	 * @param x the block x of the location in which to replace blocks. Use x & 0xF to get the x for the relevant chunk methods.
+	 * @param z the block z of the location in which to replace blocks. Use z & 0xF to get the z for the relevant chunk methods.
+	 * @param noise the block noise at this position.
+	 */
 	public void replaceSurfaceBlocks(IWorld world, Chunk chunk, Random rand, int x, int z, double noise) {
 		int run = -1;
 

@@ -1,5 +1,8 @@
 package tk.valoeghese.worldcomet.api.surface;
 
+/**
+ * Source of {@link Surface surfaces} for the world generator.
+ */
 public interface SurfaceProvider {
 	/**
 	 * @return the surface for the specified position
@@ -9,7 +12,7 @@ public interface SurfaceProvider {
 	/**
 	 * Takes in generation coordinates and returns the surface for generation.
 	 * <p/>
-	 * This may not be neccesary for every mod, as some mods will not use surfaces in shaping terrain.
+	 * This may not be necessary for every mod, as some mods will not use surfaces in shaping terrain.
 	 * 
 	 * @param genX x >> 2
 	 * @param genY y >> 3
