@@ -12,7 +12,7 @@ public interface StructureGenSettings<C extends FeatureConfig> {
 	/**
 	 * Returns how the structure feature for which this is used should generate in a biome.
 	 * 
-	 * @param biome the biome in which the structure is to generatn.
+	 * @param biome the biome in which the structure is to generation.
 	 * @param currentModifier The default, vanilla, result for said biome.
 	 * @return The config for generation, if the structure is to generate, or null, if it is not to generate.
 	 */

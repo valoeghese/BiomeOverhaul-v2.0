@@ -13,7 +13,7 @@ import net.minecraft.world.gen.feature.StructureFeature;
 import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 
 /**
- * A {@link Decorator} which is itself a list of {@link Decorator decorators} and enabled {@link StructureFeature structures} for the chunk generator. Created using a {@link WorldDecorator#builder() builder}
+ * A {@link GenDecorator} which is itself a list of {@link GenDecorator decorators} and enabled {@link StructureFeature structures} for the chunk generator. Created using a {@link WorldDecorator#builder() builder}
  */
 public final class WorldDecorator implements DecoratorBase {
 	private WorldDecorator(Builder builder) {
@@ -22,7 +22,7 @@ public final class WorldDecorator implements DecoratorBase {
 	}
 
 	/**
-	 * An {@link Iterable} of the {@link Decorator decorators} in this {@link WorldDecorator}.
+	 * An {@link Iterable} of the {@link GenDecorator decorators} in this {@link WorldDecorator}.
 	 */
 	public final Iterable<DecoratorBase> decorators;
 	private final Map<StructureFeature, StructureGenSettings> structures;
@@ -57,9 +57,9 @@ public final class WorldDecorator implements DecoratorBase {
 		}
 
 		/**
-		 * Adds a {@link Decorator} to this WorldDecorator.<br/>If you are adding a structure feature, you should also use {@link Builder#enableStructure enableStructure}.
-		 * If you are adding a FeatureDecorator of a struture, you should also
-		 * @param decorator the decorator to add to this WorldDecorator.
+		 * Adds a {@link GenDecorator} to this WorldDecorator.<br/>If you are adding a structure feature, you should also use {@link Builder#enableStructure enableStructure}.
+		 * If you are adding a {@link FeatureDecorator} of a struture, you should also
+		 * @param decorator the decorator to add to this {@link WorldDecorator}.
 		 */
 		public Builder addDecorator(DecoratorBase decorator) {
 			this.decorators.add(decorator);
@@ -84,7 +84,7 @@ public final class WorldDecorator implements DecoratorBase {
 		}
 
 		/**
-		 * Creates a copy of this WorldDecorator Builder.
+		 * Creates a copy of this {@link WorldDecorator.Builder WorldDecorator Builder}.
 		 */
 		public Builder clone() {
 			Builder result = new Builder();

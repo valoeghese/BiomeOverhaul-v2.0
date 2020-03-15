@@ -17,7 +17,7 @@ import net.minecraft.world.gen.feature.StructureFeature;
 import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 
 /**
- * {@link Decorator} for {@link Feature vanilla features}. Use the provided factory methods to create instances.
+ * {@link GenDecorator} for {@link Feature vanilla features}. Use the provided factory methods to create instances.
  */
 public final class FeatureDecorator implements DecoratorBase {
 	private FeatureDecorator(ConfiguredFeature<?, ?> feature) {
@@ -33,10 +33,19 @@ public final class FeatureDecorator implements DecoratorBase {
 		feature.generate(world, generator, rand, new BlockPos(x, generator.getSeaLevel(), z));
 	}
 
+	/**
+	 * @param feature the configured feature to turn into a {@link GenDecorator}
+	 * @return an {@link Decorator} of the specified {@link ConfiguredFeature} configured feature.
+	 */
 	public static FeatureDecorator of(ConfiguredFeature<?, ?> feature) {
 		return new FeatureDecorator(feature);
 	}
 
+	/**
+	 * @param feature the {@link ConfiguredFeature configured feature} to turn into a {@link GenDecorator}
+	 * @param decorator the configured decorator of the feature
+	 * @return an {@link Decorator} of the specified {@link ConfiguredFeature} configured feature.
+	 */
 	public static FeatureDecorator of(ConfiguredFeature<?, ?> feature, ConfiguredDecorator<?> decorator) {
 		return new FeatureDecorator(feature.createDecoratedFeature(decorator));
 	}

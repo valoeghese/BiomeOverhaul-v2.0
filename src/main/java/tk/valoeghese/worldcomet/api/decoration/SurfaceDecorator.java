@@ -7,9 +7,9 @@ import net.minecraft.world.IWorld;
 import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 
 /**
- * {@link Decorator} for generating multiple objects along the surface of the world.
+ * {@link GenDecorator} for generating multiple objects along the surface of the world.
  */
-public abstract class SurfaceDecorator extends Decorator {
+public abstract class SurfaceDecorator extends GenDecorator {
 	@Override
 	protected void decorateChunk(IWorld world, Random rand, int chunkX, int chunkZ, SurfaceProvider surfaceProvider, long seed) {
 		int chunkStartX = chunkX << 4; // get start block coordinates for chunk
@@ -50,6 +50,25 @@ public abstract class SurfaceDecorator extends Decorator {
 		}
 	}
 
+	/**
+	 * Gets the number of objects to try generate.
+	 * 
+	 * @param rand a pseudorandom number generator for decoration.
+	 * @param surfaceProvider the world generator's source of {@link tk.valoeghese.worldcomet.api.surface.Surface surfaces}
+	 * @param chunkX the chunk x position. left shift by 4 to get the corresponding start block position.
+	 * @param chunkZ the chunk z position. left shift by 4 to get the corresponding start block position.
+	 * @return the number of objects to attempt to generate for the given chunk coordinates.
+	 */
 	protected abstract int getCount(Random rand, SurfaceProvider surfaceProvider, int chunkX, int chunkZ);
+	/**
+	 * Generates an object at the specified position.
+	 * @param world the {@link net.minecraft.world.ChunkRegion chunk region "world"} in which to generate
+	 * @param rand a pseudorandom number generator for decoration.
+	 * @param surfaceProvider the world generator's source of {@link tk.valoeghese.worldcomet.api.surface.Surface surfaces}
+	 * @param x the x position at which to generate this object.
+	 * @param y the position of the air block just above the surface of the ground.
+	 * @param z the z position at which to generate this object.
+	 * @return whether the object successfully generated.
+	 */
 	protected abstract boolean generate(IWorld world, Random rand, SurfaceProvider surfaceProvider, int x, int y, int z);
 }

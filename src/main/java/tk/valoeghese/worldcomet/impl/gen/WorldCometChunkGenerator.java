@@ -62,7 +62,7 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 	}
 
 	/**
-	 * Custom carving is recommended to be done as a {@link tk.valoeghese.worldcomet.api.decoration.Decorator decorator}
+	 * Custom carving is recommended to be done as a {@link tk.valoeghese.worldcomet.api.decoration.GenDecorator decorator}
 	 */
 	@Override
 	public void carve(BiomeAccess biomeAccess, Chunk chunk, Carver carver) {
