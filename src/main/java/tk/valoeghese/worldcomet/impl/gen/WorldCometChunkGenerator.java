@@ -17,7 +17,6 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.GenerationStep.Carver;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.FeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
 import tk.valoeghese.worldcomet.api.decoration.StructureGenSettings;
@@ -271,9 +270,6 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 
 	@Override
 	public boolean hasStructure(Biome biome, StructureFeature<? extends FeatureConfig> structureFeature) {
-		if (structureFeature == Feature.STRONGHOLD) {
-			System.out.println(this.getStructureConfig(biome, structureFeature));
-		}
 		return this.getStructureConfig(biome, structureFeature) != null;
 	}
 

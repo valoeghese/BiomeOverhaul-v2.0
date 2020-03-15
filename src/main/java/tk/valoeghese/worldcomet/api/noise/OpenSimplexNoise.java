@@ -1,23 +1,21 @@
 package tk.valoeghese.worldcomet.api.noise;
 
-/*
+/**
  * OpenSimplex Noise in Java.
- * (Using implementation by Kurt Spencer)
- * 
- * v1.1 (October 5, 2014)
- * - Added 2D and 4D implementations.
+ * (Using implementation by Kurt Spencer)<br/>
+ * <br/>
+ * v1.1 (October 5, 2014)<br/>
+ * - Added 2D and 4D implementations.<br/>
  * - Proper gradient sets for all dimensions, from a
  *   dimensionally-generalizable scheme with an actual
- *   rhyme and reason behind it.
+ *   rhyme and reason behind it.<br/>
  * - Removed default permutation array in favor of
- *   default seed.
+ *   default seed.<br/>
  * - Changed seed-based constructor to be independent
  *   of any particular randomization library, so results
- *   will be the same when ported to other languages.
+ *   will be the same when ported to other languages.<br/>
  */
-
 public class OpenSimplexNoise implements Noise {
-
 	private static final double STRETCH_CONSTANT_2D = -0.211324865405187;    //(1/Math.sqrt(2+1)-1)/2;
 	private static final double SQUISH_CONSTANT_2D = 0.366025403784439;      //(Math.sqrt(2+1)-1)/2;
 	private static final double STRETCH_CONSTANT_3D = -1.0 / 6;              //(1/Math.sqrt(3+1)-1)/3;

@@ -58,14 +58,14 @@ class TestModStart {
 				.addHeightmap(new OctaveOpenSimplexNoise(
 						new Random(seed),
 						3,
-						100.0,
+						200.0,
 						50.0,
 						20.0)::sample)
 				.addDepthmap(new OctaveOpenSimplexNoise(
 						new Random(seed),
 						1,
-						30.0,
-						10.0)::sample)
+						60.0,
+						20.0)::sample)
 				.build();
 
 		SurfaceIdMap surfaceIdMap = SurfaceIdMap.builder()

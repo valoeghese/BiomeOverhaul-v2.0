@@ -2,20 +2,41 @@ package tk.valoeghese.worldcomet.api.noise;
 
 import java.util.Random;
 
+/**
+ * Noise sampler for multiple {@link OpenSimplexNoise} instances with varying frequencies and amplitudes added together.<br/>
+ * The range of the noise output can vary between samplers (based on the amplitude values passed to the constructor, but by default the range is -1 to 1.
+ */
 public final class OctaveOpenSimplexNoise implements Noise {
-	protected OpenSimplexNoise[] samplers;
-	private double clamp;
-	private double inverseFrequency, amplitudeLow, amplitudeHigh;
-
+	/**
+	 * @param rand the pseudorandom number generator to seed the noise samplers
+	 * @param octaves the number of octaves
+	 * @param spread how much to spread out the noise sampler
+	 */
 	public OctaveOpenSimplexNoise(Random rand, int octaves, double spread) {
 		this(rand, octaves, spread, 1, 1);
 	}
 
+	/**
+	 * @param rand the pseudorandom number generator to seed the noise samplers
+	 * @param octaves the number of octaves
+	 * @param spread how much to spread out the noise sampler
+	 * @param amplitude the amount to scale the noise output
+	 */
 	public OctaveOpenSimplexNoise(Random rand, int octaves, double spread, double amplitude) {
 		this(rand, octaves, spread, amplitude, amplitude);
 	}
 
+	/**
+	 * @param rand the pseudorandom number generator to seed the noise samplers
+	 * @param octaves the number of octaves
+	 * @param spread how much to spread out the noise sampler
+	 * @param amplitudeHigh the amount to scale the noise output for values generated above 0
+	 * @param amplitudeLow the amount to scale the noise output for values generated below 0 
+	 */
 	public OctaveOpenSimplexNoise(Random rand, int octaves, double spread, double amplitudeHigh, double amplitudeLow) {
+		// scale spread up so it matches that of normal OpenSimplexNoise
+		spread *= 2;
+
 		samplers = new OpenSimplexNoise[octaves];
 		clamp = 1D / (1D - (1D / Math.pow(2, octaves)));
 
@@ -27,6 +48,10 @@ public final class OctaveOpenSimplexNoise implements Noise {
 		this.amplitudeLow = amplitudeLow;
 		this.amplitudeHigh = amplitudeHigh;
 	}
+
+	private OpenSimplexNoise[] samplers;
+	private double clamp;
+	private double inverseFrequency, amplitudeLow, amplitudeHigh;
 
 	public double sample(double x, double y) {
 		double amplFreq = 0.5D;
