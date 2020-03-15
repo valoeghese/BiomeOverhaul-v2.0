@@ -1,5 +1,6 @@
 package tk.valoeghese.worldcomet.impl.gen;
 
+import java.util.Map;
 import java.util.function.Predicate;
 
 import net.minecraft.block.BlockState;
@@ -9,12 +10,17 @@ import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.Heightmap.Type;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.GenerationStep.Carver;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.FeatureConfig;
+import net.minecraft.world.gen.feature.StructureFeature;
+import tk.valoeghese.worldcomet.api.decoration.StructureGenSettings;
 import tk.valoeghese.worldcomet.api.decoration.WorldDecorator;
 import tk.valoeghese.worldcomet.api.noise.OctaveOpenSimplexNoise;
 import tk.valoeghese.worldcomet.api.surface.Surface;
@@ -22,8 +28,8 @@ import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 import tk.valoeghese.worldcomet.api.terrain.Depthmap;
 import tk.valoeghese.worldcomet.api.terrain.GeneratorSettings;
 
-// Protected fields in case a modder wishes to extend functionality
 public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGenerator<WorldCometChunkGeneratorConfig<T>> implements WorldBiomeManager {
+	// Protected fields in case a modder touching the impl for some reason wishes to extend functionality
 	protected final OctaveOpenSimplexNoise blockNoise;
 	protected final ChunkRandom rand;
 
@@ -32,6 +38,7 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 	protected final SurfaceProvider surfaceProvider;
 	protected final WorldDecorator worldDecorator;
 	protected final boolean vanillaCarving;
+	protected final Map<StructureFeature, StructureGenSettings> structureSettingsMap;
 
 	public WorldCometChunkGenerator(IWorld world, BiomeSource source, WorldCometChunkGeneratorConfig<T> config) {
 		super(world, source, config);
@@ -49,6 +56,7 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 		this.surfaceProvider = config.providerFactory.apply(this.seed);
 		this.depthmap = config.depthmapFactory.apply(this.seed).setSurfaceProvider(this.surfaceProvider);;
 		this.worldDecorator = config.worldDecorator;
+		this.structureSettingsMap = this.worldDecorator.getStructureSettingMap();
 
 		this.seaLevel = settings.seaLevel;
 	}
@@ -259,5 +267,25 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 	@Override
 	public Surface getSurface(int x, int z, int height) {
 		return this.surfaceProvider.getSurface(x, z, height);
+	}
+
+	@Override
+	public boolean hasStructure(Biome biome, StructureFeature<? extends FeatureConfig> structureFeature) {
+		if (structureFeature == Feature.STRONGHOLD) {
+			System.out.println(this.getStructureConfig(biome, structureFeature));
+		}
+		return this.getStructureConfig(biome, structureFeature) != null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <C extends FeatureConfig> C getStructureConfig(Biome biome, StructureFeature<C> structureFeature) {
+		C structureConfig = biome.getStructureFeatureConfig(structureFeature);
+
+		if (this.structureSettingsMap.containsKey(structureFeature)) {
+			structureConfig = (C) this.structureSettingsMap.get(structureFeature).get(biome, structureConfig);
+		}
+
+		return structureConfig;
 	}
 }

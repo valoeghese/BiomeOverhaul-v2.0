@@ -6,17 +6,20 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.decorator.ConfiguredDecorator;
+import net.minecraft.world.gen.decorator.Decorator;
+import net.minecraft.world.gen.decorator.NopeDecoratorConfig;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.DecoratedFeature;
 import net.minecraft.world.gen.feature.DecoratedFeatureConfig;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.FeatureConfig;
+import net.minecraft.world.gen.feature.StructureFeature;
 import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 
+/**
+ * {@link Decorator} for {@link Feature vanilla features}. Use the provided factory methods to create instances.
+ */
 public final class FeatureDecorator implements DecoratorBase {
-	/**
-	 * Use FeatureDecorator#of to create instances.
-	 */
 	private FeatureDecorator(ConfiguredFeature<?, ?> feature) {
 		this.feature = feature;
 	}
@@ -42,5 +45,12 @@ public final class FeatureDecorator implements DecoratorBase {
 		return new FeatureDecorator(feature.configure(config));
 	}
 
-	public static final FeatureDecorator STRONGHOLD = new FeatureDecorator(Feature.STRONGHOLD.configure(new DefaultFeatureConfig()));
+	/**
+	 * Factory method especially for {@link StructureFeature} feature decorators.
+	 */
+	public static <C extends FeatureConfig> FeatureDecorator of(StructureFeature<C> structureFeature, C config) {
+		return new FeatureDecorator(structureFeature.configure(config).createDecoratedFeature(Decorator.NOPE.configure(NopeDecoratorConfig.DEFAULT)));
+	}
+
+	public static final FeatureDecorator STRONGHOLD = FeatureDecorator.of(Feature.STRONGHOLD, FeatureConfig.DEFAULT);
 }

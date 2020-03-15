@@ -6,6 +6,9 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.IWorld;
 import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 
+/**
+ * {@link Decorator} for generating multiple objects along the surface of the world.
+ */
 public abstract class SurfaceDecorator extends Decorator {
 	@Override
 	protected void decorateChunk(IWorld world, Random rand, int chunkX, int chunkZ, SurfaceProvider surfaceProvider, long seed) {

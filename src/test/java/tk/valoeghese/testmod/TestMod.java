@@ -6,12 +6,20 @@ import java.util.function.LongFunction;
 import com.google.common.collect.ImmutableSet;
 
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.biome.DefaultBiomeFeatures;
 import net.minecraft.world.biome.layer.SmoothenShorelineLayer;
+import net.minecraft.world.gen.decorator.CountExtraChanceDecoratorConfig;
+import net.minecraft.world.gen.decorator.Decorator;
+import net.minecraft.world.gen.feature.DefaultFeatureConfig;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.StructureFeature;
 import tk.valoeghese.testmod.decorator.CoolTreeDecorator;
 import tk.valoeghese.testmod.surface.DesertSurface;
 import tk.valoeghese.worldcomet.api.WorldCometApi;
 import tk.valoeghese.worldcomet.api.decoration.FeatureDecorator;
+import tk.valoeghese.worldcomet.api.decoration.StructureGenSettings;
 import tk.valoeghese.worldcomet.api.decoration.WorldDecorator;
 import tk.valoeghese.worldcomet.api.noise.OctaveOpenSimplexNoise;
 import tk.valoeghese.worldcomet.api.surface.Surface;
@@ -26,12 +34,21 @@ import tk.valoeghese.worldcomet.impl.type.WorldType;
 
 public class TestMod implements ModInitializer {
 	public static WorldCometChunkGeneratorType<?> cgt;
-	public static WorldType<?> worldType;
+	public static WorldType<?> worldType = TestModStart.worldType();
 
 	@Override
 	public void onInitialize() {
 		System.out.println("Initialising WorldComet test mod!");
+		// make sure it's been initialised on the client
+		// this wouldn't be neccesary if the damn level type api was merged into fabric api
+		worldType.hashCode();
+		// register chunk generator type
+		Registry.register(Registry.CHUNK_GENERATOR_TYPE, "worldcomettest:testcgt", cgt);
+	}
+}
 
+class TestModStart {
+	static WorldType<?> worldType() {
 		GeneratorSettings settings = GeneratorSettings.builder()
 				.seaLevel(50)
 				.build();
@@ -66,10 +83,18 @@ public class TestMod implements ModInitializer {
 
 		WorldDecorator decorator = WorldDecorator.builder()
 				.addDecorator(FeatureDecorator.STRONGHOLD)
+				.enableStructure(StructureFeature.STRONGHOLD, StructureGenSettings.vanillaSettings())
+				.addDecorator(FeatureDecorator.of(Feature.JUNGLE_TEMPLE, new DefaultFeatureConfig()))
+				.enableStructure(StructureFeature.JUNGLE_TEMPLE, (biome, config) -> {
+					// enable in plains, which, in this example generator, is added through the surface Surface.DEFAULT
+					if (biome == Biomes.PLAINS) return new DefaultFeatureConfig();
+					else return null;
+				})
 				.addDecorator(new CoolTreeDecorator())
+				.addDecorator(FeatureDecorator.of(Feature.NORMAL_TREE.configure(DefaultBiomeFeatures.OAK_TREE_CONFIG), Decorator.COUNT_EXTRA_HEIGHTMAP.configure(new CountExtraChanceDecoratorConfig(2, 0.1f, 1))))
 				.build();
 
-		cgt = WorldCometApi.createChunkGeneratorType(settings, depthmapFactory, surfaceProviderFactory, decorator);
-		worldType = WorldCometApi.createWorldType("worldcomet_test", cgt, ImmutableSet.of(Biomes.OCEAN));
+		TestMod.cgt = WorldCometApi.createChunkGeneratorType(settings, depthmapFactory, surfaceProviderFactory, decorator);
+		return WorldCometApi.createWorldType("worldcomet_test", TestMod.cgt, ImmutableSet.of(Biomes.PLAINS, Biomes.DESERT));
 	}
 }

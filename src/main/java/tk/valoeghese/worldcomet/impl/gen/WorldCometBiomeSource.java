@@ -5,6 +5,7 @@ import java.util.Set;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeSource;
+import net.minecraft.world.gen.feature.StructureFeature;
 
 public final class WorldCometBiomeSource extends BiomeSource {
 	private final long worldSeed;
@@ -30,5 +31,12 @@ public final class WorldCometBiomeSource extends BiomeSource {
 		final int height = this.biomeManager.getHeightForXZ(x, z);
 
 		return this.biomeManager.getSurface(x, z, height).getBiome(height);
+	}
+
+	@Override
+	public boolean hasStructureFeature(StructureFeature<?> feature) {
+		return (Boolean)this.structureFeatures.computeIfAbsent(feature, structureFeature -> {
+			return this.biomes.stream().anyMatch(biome -> this.biomeManager.hasStructure(biome, feature));
+		});
 	}
 }

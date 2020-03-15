@@ -51,13 +51,13 @@ public class CoolTreeDecorator extends SurfaceDecorator {
 		pos.setX(x);
 		pos.setZ(z);
 
+		pos.setY(y + height);
+		world.setBlockState(pos, Blocks.SPRUCE_LEAVES.getDefaultState(), 19);
+
 		for (int yo = 0; yo < height; ++yo) {
 			pos.setY(y + yo);
 			world.setBlockState(pos, Blocks.SPRUCE_LOG.getDefaultState(), 19);
 		}
-
-		pos.setY(y + height);
-		world.setBlockState(pos, Blocks.SPRUCE_LEAVES.getDefaultState(), 19);
 
 		return true;
 	}
