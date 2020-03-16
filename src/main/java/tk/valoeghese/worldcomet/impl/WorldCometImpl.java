@@ -17,19 +17,35 @@ public final class WorldCometImpl {
 		return new WorldCometChunkGeneratorType<>(config);
 	}
 
-	public static double sampleDepthmap(int noiseGenX, int noiseGenY, int noiseGenZ, Iterable<HeightmapFunction> heightmaps, Iterable<DepthmapFunction> depthmaps, Iterable<SurfaceDepthmapFunction> surfaceDepthmaps, SurfaceProvider surfaceProvider) {
+	public static double sampleHeightmapDepthmap(int noiseGenX, int noiseGenY, int noiseGenZ, Iterable<HeightmapFunction> heightmaps, Iterable<DepthmapFunction> depthmaps, Iterable<SurfaceDepthmapFunction> surfaceDepthmaps, SurfaceProvider surfaceProvider) {
 		Surface surface = surfaceProvider.getSurfaceForGeneration(noiseGenX, noiseGenY, noiseGenZ);
 
 		double result = FunctionalUtils.accumulate(heightmaps, map -> map.getHeight(noiseGenX, noiseGenZ));
-		result += FunctionalUtils.accumulate(depthmaps, map -> map.getHeight(noiseGenX, noiseGenY, noiseGenZ));
-		result += FunctionalUtils.accumulate(surfaceDepthmaps, map -> map.getHeight(noiseGenX, noiseGenY, noiseGenZ, surface));
+		result += FunctionalUtils.accumulate(depthmaps, map -> map.getHeight(noiseGenX << 2, noiseGenY << 3, noiseGenZ << 2));
+		result += FunctionalUtils.accumulate(surfaceDepthmaps, map -> map.getHeight(noiseGenX << 2, noiseGenY << 3, noiseGenZ << 2, surface));
 		return result;
 	}
 
-	public static double sampleDepthmap(int noiseGenX, int noiseGenY, int noiseGenZ, Iterable<HeightmapFunction> heightmaps, Iterable<DepthmapFunction> depthmaps) {
-		double result = FunctionalUtils.accumulate(heightmaps, map -> map.getHeight(noiseGenX, noiseGenZ));
-		result += FunctionalUtils.accumulate(depthmaps, map -> map.getHeight(noiseGenX, noiseGenY, noiseGenZ));
+	public static double sampleHeightmapDepthmap(int noiseGenX, int noiseGenY, int noiseGenZ, Iterable<HeightmapFunction> heightmaps, Iterable<DepthmapFunction> depthmaps) {
+		double result = FunctionalUtils.accumulate(heightmaps, map -> map.getHeight(noiseGenX << 2, noiseGenZ << 2));
+		result += FunctionalUtils.accumulate(depthmaps, map -> map.getHeight(noiseGenX << 2, noiseGenY << 3, noiseGenZ << 3));
 		return result;
+	}
+
+	public static double sampleDepthmap(int noiseGenX, int noiseGenY, int noiseGenZ, Iterable<DepthmapFunction> depthmaps, Iterable<SurfaceDepthmapFunction> surfaceDepthmaps, SurfaceProvider surfaceProvider) {
+		Surface surface = surfaceProvider.getSurfaceForGeneration(noiseGenX, noiseGenY, noiseGenZ);
+
+		double result = FunctionalUtils.accumulate(depthmaps, map -> map.getHeight(noiseGenX << 2, noiseGenY << 3, noiseGenZ << 2));
+		result += FunctionalUtils.accumulate(surfaceDepthmaps, map -> map.getHeight(noiseGenX << 2, noiseGenY << 3, noiseGenZ << 2, surface));
+		return result;
+	}
+
+	public static double sampleDepthmap(int noiseGenX, int noiseGenY, int noiseGenZ, Iterable<DepthmapFunction> depthmaps) {
+		return FunctionalUtils.accumulate(depthmaps, map -> map.getHeight(noiseGenX << 2, noiseGenY << 3, noiseGenZ << 3));
+	}
+
+	public static double sampleHeightmap(int x, int y, Iterable<HeightmapFunction> heightMaps) {
+		return FunctionalUtils.accumulate(heightMaps, map -> map.getHeight(x, y));
 	}
 
 	public static final SurfaceProvider NONE_SURFACE_PROVIDER = new NoneSurfaceProvider();

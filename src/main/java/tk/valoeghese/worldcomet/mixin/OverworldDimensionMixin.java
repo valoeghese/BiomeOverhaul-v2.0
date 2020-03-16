@@ -20,6 +20,7 @@ public abstract class OverworldDimensionMixin extends Dimension {
 		super(world, type, 0);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Inject(method = "createChunkGenerator", at = @At("RETURN"), cancellable = true)
 	public void createChunkGenerator(CallbackInfoReturnable<ChunkGenerator<? extends ChunkGeneratorConfig>> info) {
 		LevelGeneratorType type = this.world.getLevelProperties().getGeneratorType();

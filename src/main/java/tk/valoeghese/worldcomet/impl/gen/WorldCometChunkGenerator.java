@@ -100,6 +100,13 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 		int chunkX = chunk.getPos().x;
 		int chunkZ = chunk.getPos().z;
 
+		boolean nLerpHeightmap = !this.depthmap.lerpHeightmap();
+
+		double[] heightmap = null;
+		if (nLerpHeightmap) {
+			heightmap = this.depthmap.heightmap(chunkX, chunkZ);
+		}
+
 		BlockPos.Mutable pos = new BlockPos.Mutable();
 
 		for (int subChunkX = 0; subChunkX < 4; ++subChunkX)  {
@@ -109,11 +116,13 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 
 				for (int subChunkY = 0; subChunkY < 32; ++subChunkY) {
 					for (int localX = 0; localX < 4; ++localX) {
-						pos.setX((subChunkX << 2) + localX);
+						int totalX = (subChunkX << 2) + localX;
+						pos.setX(totalX);
 						double deltaX = fade((double) localX / 4.0);
 
 						for (int localZ = 0; localZ < 4; ++localZ) {
-							pos.setZ((subChunkZ << 2) + localZ);
+							int totalZ = (subChunkZ << 2) + localZ;
+							pos.setZ(totalZ);
 							double deltaZ = fade((double) localZ / 4.0);
 
 							// start interpolation
@@ -135,6 +144,10 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 								double deltaY = fade((double) localY / 8.0);
 								double height = lerp(deltaY, lowVal, highVal);
 
+								if (nLerpHeightmap) {
+									height += heightmap[totalX + (totalZ << 4)];
+								}
+
 								BlockState toSet = AIR;
 								if (y < height) {
 									toSet = STONE;
@@ -152,6 +165,84 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 				}
 			}
 		}
+	}
+
+	@Override
+	public int getHeightOnGround(int x, int z, Type heightmapType) {
+		final Predicate<BlockState> blockPredicate = heightmapType.getBlockPredicate();
+
+		int chunkX = (x >> 4);
+		int chunkZ = (z >> 4);
+		int targetX = (x - (chunkX << 4));
+		int targetZ = (z - (chunkZ << 4));
+		int subChunkX = (targetX >> 2);
+		int subChunkZ = (targetZ >> 2);
+		int localX = targetX - (subChunkX << 2);
+		int localZ = targetZ - (subChunkZ << 2);
+
+		boolean nLerpHeightmap = !this.depthmap.lerpHeightmap();
+
+		double[] heightmap = null;
+		if (nLerpHeightmap) {
+			heightmap = this.depthmap.heightmap(chunkX, chunkZ);
+		}
+
+		int result = 0;
+
+		BlockPos.Mutable pos = new BlockPos.Mutable();
+
+		double[] low = sampleNoise(subChunkX, subChunkX, chunkX, chunkZ, 0);
+		double[] high = sampleNoise(subChunkX, subChunkX, chunkX, chunkZ, 1);
+
+		for (int subChunkY = 0; subChunkY < 32; ++subChunkY) {
+			int totalX = (subChunkX << 2) + localX;
+			int totalZ = (subChunkZ << 2) + localZ;
+			pos.setX(totalX);
+			pos.setZ(totalZ);
+
+			double deltaX = fade((double) localX / 4.0);
+			double deltaZ = fade((double) localZ / 4.0);
+
+			// start interpolation
+			// nw = 0, sw = 1, ne = 2, se = 3
+			double lowVal = lerp(
+					deltaZ,
+					lerp(deltaX, low[0], low[2]),
+					lerp(deltaX, low[1], low[3]));
+
+			double highVal = lerp(
+					deltaZ,
+					lerp(deltaX, high[0], high[2]),
+					lerp(deltaX, high[1], high[3]));
+
+			for (int localY = 0; localY < 8; ++localY) {
+				int y = (subChunkY << 3) + localY;
+				pos.setY(y);
+
+				double deltaY = fade((double) localY / 8.0);
+				double height = lerp(deltaY, lowVal, highVal);
+
+				if (nLerpHeightmap) {
+					height += heightmap[totalX + (totalZ << 4)];
+				}
+
+				BlockState toSet = AIR;
+				if (y < height) {
+					toSet = STONE;
+				} else if (y < this.seaLevel) {
+					toSet = WATER;
+				}
+
+				if (blockPredicate.test(toSet)) {
+					result = y;
+				}
+			}
+
+			low = high;
+			high = sampleNoise(subChunkX, subChunkZ, chunkX, chunkZ, subChunkY);
+		}
+
+		return result;
 	}
 
 	private static final BlockState AIR = Blocks.AIR.getDefaultState();
@@ -179,71 +270,6 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 		result[1] = this.depthmap.sample(x1, subChunkY, z2);
 		result[2] = this.depthmap.sample(x2, subChunkY, z1);
 		result[3] = this.depthmap.sample(x2, subChunkY, z2);
-
-		return result;
-	}
-
-	@Override
-	public int getHeightOnGround(int x, int z, Type heightmapType) {
-		final Predicate<BlockState> blockPredicate = heightmapType.getBlockPredicate();
-
-		int chunkX = (x >> 4);
-		int chunkZ = (z >> 4);
-		int targetX = (x - (chunkX << 4));
-		int targetZ = (z - (chunkZ << 4));
-		int subChunkX = (targetX >> 2);
-		int subChunkZ = (targetZ >> 2);
-		int localX = targetX - (subChunkX << 2);
-		int localZ = targetZ - (subChunkZ << 2);
-
-		int result = 0;
-
-		BlockPos.Mutable pos = new BlockPos.Mutable();
-
-		double[] low = sampleNoise(subChunkX, subChunkX, chunkX, chunkZ, 0);
-		double[] high = sampleNoise(subChunkX, subChunkX, chunkX, chunkZ, 1);
-
-		for (int subChunkY = 0; subChunkY < 32; ++subChunkY) {
-			pos.setX((subChunkX << 2) + localX);
-			pos.setZ((subChunkZ << 2) + localZ);
-
-			double deltaX = fade((double) localX / 4.0);
-			double deltaZ = fade((double) localZ / 4.0);
-
-			// start interpolation
-			// nw = 0, sw = 1, ne = 2, se = 3
-			double lowVal = lerp(
-					deltaZ,
-					lerp(deltaX, low[0], low[2]),
-					lerp(deltaX, low[1], low[3]));
-
-			double highVal = lerp(
-					deltaZ,
-					lerp(deltaX, high[0], high[2]),
-					lerp(deltaX, high[1], high[3]));
-
-			for (int localY = 0; localY < 8; ++localY) {
-				int y = (subChunkY << 3) + localY;
-				pos.setY(y);
-
-				double deltaY = fade((double) localY / 8.0);
-				double height = lerp(deltaY, lowVal, highVal);
-
-				BlockState toSet = AIR;
-				if (y < height) {
-					toSet = STONE;
-				} else if (y < this.seaLevel) {
-					toSet = WATER;
-				}
-
-				if (blockPredicate.test(toSet)) {
-					result = y;
-				}
-			}
-
-			low = high;
-			high = sampleNoise(subChunkX, subChunkZ, chunkX, chunkZ, subChunkY);
-		}
 
 		return result;
 	}

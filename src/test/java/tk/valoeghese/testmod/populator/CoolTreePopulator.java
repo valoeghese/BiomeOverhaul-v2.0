@@ -24,7 +24,7 @@ public class CoolTreePopulator extends SurfacePopulator {
 		}
 
 		// can only generate on grass
-		if (world.getBlockState(new BlockPos(x, y - 1, z)).getBlock() != Blocks.GRASS) {
+		if (world.getBlockState(new BlockPos(x, y - 1, z)).getBlock() != Blocks.GRASS_BLOCK) {
 			return false;
 		}
 

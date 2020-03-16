@@ -13,7 +13,7 @@ public final class Depthmap {
 	private final Iterable<HeightmapFunction> heightmaps;
 	private final Iterable<DepthmapFunction> depthmaps;
 	private final Iterable<SurfaceDepthmapFunction> surfaceDepthmaps;
-	private final boolean sampleSurfaceForNoiseGen;
+	private final boolean sampleSurfaceForNoiseGen, lerpHeightmap;
 	private final double baseHeight;
 
 	private SurfaceProvider surfaceProvider = WorldCometImpl.NONE_SURFACE_PROVIDER;
@@ -24,6 +24,11 @@ public final class Depthmap {
 		this.surfaceDepthmaps = builder.surfaceDepthmaps;
 		this.sampleSurfaceForNoiseGen = !builder.surfaceDepthmaps.isEmpty();
 		this.baseHeight = builder.baseHeight;
+		this.lerpHeightmap = builder.lerpHeightmap;
+	}
+
+	public boolean lerpHeightmap() {
+		return this.lerpHeightmap;
 	}
 
 	/**
@@ -34,11 +39,36 @@ public final class Depthmap {
 		return this;
 	}
 
+	public double[] heightmap(int chunkX, int chunkZ) {
+		double[] result = new double[16 * 16];
+
+		int chunkStartX = chunkX << 4;
+		int chunkStartZ = chunkZ << 4;
+
+		for (int xo = 0; xo < 16; ++xo) {
+			int totalX = xo + chunkStartX;
+
+			for (int zo = 0; zo < 16; ++zo) {
+				result[xo + (zo << 4)] = WorldCometImpl.sampleHeightmap(totalX, chunkStartZ + zo, this.heightmaps);
+			}
+		}
+
+		return result;
+	}
+
 	public double sample(int noiseGenX, int noiseGenY, int noiseGenZ) {
-		if (sampleSurfaceForNoiseGen) {
-			return this.baseHeight + WorldCometImpl.sampleDepthmap(noiseGenX, noiseGenY, noiseGenZ, this.heightmaps, this.depthmaps, this.surfaceDepthmaps, this.surfaceProvider);
+		if (this.lerpHeightmap) {
+			if (this.sampleSurfaceForNoiseGen) {
+				return this.baseHeight + WorldCometImpl.sampleHeightmapDepthmap(noiseGenX, noiseGenY, noiseGenZ, this.heightmaps, this.depthmaps, this.surfaceDepthmaps, this.surfaceProvider);
+			} else {
+				return this.baseHeight + WorldCometImpl.sampleHeightmapDepthmap(noiseGenX, noiseGenY, noiseGenZ, this.heightmaps, this.depthmaps);
+			}
 		} else {
-			return this.baseHeight + WorldCometImpl.sampleDepthmap(noiseGenX, noiseGenY, noiseGenZ, this.heightmaps, this.depthmaps);
+			if (this.sampleSurfaceForNoiseGen) {
+				return this.baseHeight + WorldCometImpl.sampleDepthmap(noiseGenX, noiseGenY, noiseGenZ, this.depthmaps, this.surfaceDepthmaps, this.surfaceProvider);
+			} else {
+				return this.baseHeight + WorldCometImpl.sampleDepthmap(noiseGenX, noiseGenY, noiseGenZ, this.depthmaps);
+			}
 		}
 	}
 
@@ -51,6 +81,7 @@ public final class Depthmap {
 		private final List<DepthmapFunction> depthmaps = new ArrayList<>();
 		private final List<SurfaceDepthmapFunction> surfaceDepthmaps = new ArrayList<>();
 		private double baseHeight = 0;
+		private boolean lerpHeightmap = false;
 
 		private Builder() {
 			// NO-OP
@@ -73,6 +104,11 @@ public final class Depthmap {
 
 		public Builder addSurfaceDepthmap(SurfaceDepthmapFunction surfaceDepthmap) {
 			this.surfaceDepthmaps.add(surfaceDepthmap);
+			return this;
+		}
+
+		public Builder lerpHeightmap(boolean lerpHeightmap) {
+			this.lerpHeightmap = lerpHeightmap;
 			return this;
 		}
 
