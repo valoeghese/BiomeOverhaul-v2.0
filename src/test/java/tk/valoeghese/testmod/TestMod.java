@@ -15,13 +15,13 @@ import net.minecraft.world.gen.decorator.Decorator;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.StructureFeature;
-import tk.valoeghese.testmod.decorator.CoolTreeDecorator;
+import tk.valoeghese.testmod.populator.CoolTreePopulator;
 import tk.valoeghese.testmod.surface.DesertSurface;
 import tk.valoeghese.worldcomet.api.WorldComet;
-import tk.valoeghese.worldcomet.api.decoration.FeatureDecorator;
-import tk.valoeghese.worldcomet.api.decoration.StructureGenSettings;
-import tk.valoeghese.worldcomet.api.decoration.WorldDecorator;
 import tk.valoeghese.worldcomet.api.noise.OctaveOpenSimplexNoise;
+import tk.valoeghese.worldcomet.api.populator.FeaturePopulator;
+import tk.valoeghese.worldcomet.api.populator.StructureGenSettings;
+import tk.valoeghese.worldcomet.api.populator.WorldPopulator;
 import tk.valoeghese.worldcomet.api.surface.Surface;
 import tk.valoeghese.worldcomet.api.surface.fractal.FractalLongFunction;
 import tk.valoeghese.worldcomet.api.surface.fractal.FractalSurfaceProvider;
@@ -84,22 +84,20 @@ class TestModStart {
 				.build())
 				.buildFactory(Height2FractalFunction.ALWAYS_ZERO, surfaceIdMap);
 
-		//LongFunction<SingleSurfaceProvider> spf = SingleSurfaceProvider.factoryOf(Surface.DEFAULT);
-
-		WorldDecorator decorator = WorldDecorator.builder()
-				.addDecorator(FeatureDecorator.STRONGHOLD)
+		WorldPopulator populator = WorldPopulator.builder()
+				.addPopulator(FeaturePopulator.STRONGHOLD)
 				.enableStructure(StructureFeature.STRONGHOLD, StructureGenSettings.vanillaSettings())
-				.addDecorator(FeatureDecorator.of(Feature.JUNGLE_TEMPLE, new DefaultFeatureConfig()))
+				.addPopulator(FeaturePopulator.of(Feature.JUNGLE_TEMPLE, new DefaultFeatureConfig()))
 				.enableStructure(StructureFeature.JUNGLE_TEMPLE, (biome, config) -> {
 					// enable in plains, which, in this example generator, is added through the surface Surface.DEFAULT
 					if (biome == Biomes.PLAINS) return new DefaultFeatureConfig();
 					else return null;
 				})
-				.addDecorator(new CoolTreeDecorator())
-				.addDecorator(FeatureDecorator.of(Feature.NORMAL_TREE.configure(DefaultBiomeFeatures.OAK_TREE_CONFIG), Decorator.COUNT_EXTRA_HEIGHTMAP.configure(new CountExtraChanceDecoratorConfig(2, 0.1f, 1))))
+				.addPopulator(new CoolTreePopulator())
+				.addPopulator(FeaturePopulator.of(Feature.NORMAL_TREE.configure(DefaultBiomeFeatures.OAK_TREE_CONFIG), Decorator.COUNT_EXTRA_HEIGHTMAP.configure(new CountExtraChanceDecoratorConfig(2, 0.1f, 1))))
 				.build();
 
-		TestMod.cgt = WorldComet.createChunkGeneratorType(settings, depthmapFactory, surfaceProviderFactory, decorator);
+		TestMod.cgt = WorldComet.createChunkGeneratorType(settings, depthmapFactory, surfaceProviderFactory, populator);
 		return WorldComet.createWorldType("worldcomet_test", TestMod.cgt, ImmutableSet.of(Biomes.PLAINS, Biomes.DESERT, Biomes.WARM_OCEAN, Biomes.OCEAN));
 	}
 }

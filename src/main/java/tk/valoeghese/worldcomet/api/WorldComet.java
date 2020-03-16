@@ -7,7 +7,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
 import net.minecraft.world.gen.chunk.ChunkGeneratorType;
-import tk.valoeghese.worldcomet.api.decoration.WorldDecorator;
+import tk.valoeghese.worldcomet.api.populator.WorldPopulator;
 import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 import tk.valoeghese.worldcomet.api.terrain.Depthmap;
 import tk.valoeghese.worldcomet.api.terrain.GeneratorSettings;
@@ -24,13 +24,13 @@ public final class WorldComet {
 	/**
 	 * Creates a WorldComet {@link ChunkGeneratorType}.
 	 * @param settings the settings for the world comet chunk generator
-	 * @param depthmapFactory TODO document this
-	 * @param surfaceProviderFactory TODO document this
-	 * @param decorator TODO document this
+	 * @param depthmapFactory factory which takes the world seed and outputs a Depthmap object for shaping the world
+	 * @param surfaceProviderFactory factory which takes the world seed and outputs a SurfaceProvider object for providing the surfaces of the world
+	 * @param worldPopulator object which defines how the world should be populated/decorated.
 	 * @return the created chunk generator type.
 	 */
-	public static <T extends SurfaceProvider> WorldCometChunkGeneratorType<T> createChunkGeneratorType(GeneratorSettings settings, LongFunction<Depthmap> depthmapFactory, LongFunction<T> surfaceProviderFactory, WorldDecorator decorator) {
-		return WorldCometImpl.createChunkGeneratorType(new WorldCometChunkGeneratorConfig<>(settings, depthmapFactory, surfaceProviderFactory, decorator));
+	public static <T extends SurfaceProvider> WorldCometChunkGeneratorType<T> createChunkGeneratorType(GeneratorSettings settings, LongFunction<Depthmap> depthmapFactory, LongFunction<T> surfaceProviderFactory, WorldPopulator worldPopulator) {
+		return WorldCometImpl.createChunkGeneratorType(new WorldCometChunkGeneratorConfig<>(settings, depthmapFactory, surfaceProviderFactory, worldPopulator));
 	}
 
 	/**

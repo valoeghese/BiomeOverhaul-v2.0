@@ -1,16 +1,16 @@
-package tk.valoeghese.testmod.decorator;
+package tk.valoeghese.testmod.populator;
 
 import java.util.Random;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
-import tk.valoeghese.worldcomet.api.decoration.SurfaceDecorator;
+import tk.valoeghese.worldcomet.api.populator.SurfacePopulator;
 import tk.valoeghese.worldcomet.api.surface.Surface;
 import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 
 // The leaves decay but I can't be bothered to fix it
-public class CoolTreeDecorator extends SurfaceDecorator {
+public class CoolTreePopulator extends SurfacePopulator {
 	@Override
 	protected int getCount(Random rand, SurfaceProvider surfaceProvider, int chunkX, int chunkZ) {
 		return rand.nextInt(3);

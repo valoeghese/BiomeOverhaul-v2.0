@@ -1,4 +1,4 @@
-package tk.valoeghese.worldcomet.api.decoration;
+package tk.valoeghese.worldcomet.api.populator;
 
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.FeatureConfig;

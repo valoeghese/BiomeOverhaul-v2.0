@@ -19,9 +19,9 @@ import net.minecraft.world.gen.GenerationStep.Carver;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.FeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
-import tk.valoeghese.worldcomet.api.decoration.StructureGenSettings;
-import tk.valoeghese.worldcomet.api.decoration.WorldDecorator;
 import tk.valoeghese.worldcomet.api.noise.OctaveOpenSimplexNoise;
+import tk.valoeghese.worldcomet.api.populator.StructureGenSettings;
+import tk.valoeghese.worldcomet.api.populator.WorldPopulator;
 import tk.valoeghese.worldcomet.api.surface.Surface;
 import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 import tk.valoeghese.worldcomet.api.terrain.Depthmap;
@@ -35,7 +35,7 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 	protected final int seaLevel;
 	protected final Depthmap depthmap;
 	protected final SurfaceProvider surfaceProvider;
-	protected final WorldDecorator worldDecorator;
+	protected final WorldPopulator worldPopulator;
 	protected final boolean vanillaCarving;
 	protected final Map<StructureFeature, StructureGenSettings> structureSettingsMap;
 
@@ -54,14 +54,14 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 
 		this.surfaceProvider = config.providerFactory.apply(this.seed);
 		this.depthmap = config.depthmapFactory.apply(this.seed).setSurfaceProvider(this.surfaceProvider);;
-		this.worldDecorator = config.worldDecorator;
-		this.structureSettingsMap = this.worldDecorator.getStructureSettingMap();
+		this.worldPopulator = config.worldPopulator;
+		this.structureSettingsMap = this.worldPopulator.getStructureSettingMap();
 
 		this.seaLevel = settings.seaLevel;
 	}
 
 	/**
-	 * Custom carving is recommended to be done as a {@link tk.valoeghese.worldcomet.api.decoration.GenDecorator decorator}
+	 * Custom carving is recommended to be done as a {@link tk.valoeghese.worldcomet.api.populator.Populator decorator}
 	 */
 	@Override
 	public void carve(BiomeAccess biomeAccess, Chunk chunk, Carver carver) {
@@ -255,7 +255,7 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 
 		this.rand.setSeed(this.seed + 8526167 * chunkX - 935177 * chunkZ);
 
-		this.worldDecorator.decorateChunk(region, this, this.rand, chunkX, chunkZ, this.surfaceProvider, chunkZ);
+		this.worldPopulator.populateChunk(region, this, this.rand, chunkX, chunkZ, this.surfaceProvider, chunkZ);
 	}
 
 	@Override

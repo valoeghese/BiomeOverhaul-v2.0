@@ -1,4 +1,4 @@
-package tk.valoeghese.worldcomet.api.decoration;
+package tk.valoeghese.worldcomet.api.populator;
 
 import java.util.Random;
 
@@ -7,11 +7,11 @@ import net.minecraft.world.IWorld;
 import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 
 /**
- * {@link GenDecorator} for generating multiple objects along the surface of the world.
+ * {@link Populator} for generating multiple objects along the surface of the world.
  */
-public abstract class SurfaceDecorator extends GenDecorator {
+public abstract class SurfacePopulator extends Populator {
 	@Override
-	protected void decorateChunk(IWorld world, Random rand, int chunkX, int chunkZ, SurfaceProvider surfaceProvider, long seed) {
+	protected void populateChunk(IWorld world, Random rand, int chunkX, int chunkZ, SurfaceProvider surfaceProvider, long seed) {
 		int chunkStartX = chunkX << 4; // get start block coordinates for chunk
 		int chunkStartZ = chunkZ << 4;
 
@@ -53,7 +53,7 @@ public abstract class SurfaceDecorator extends GenDecorator {
 	/**
 	 * Gets the number of objects to try generate.
 	 * 
-	 * @param rand a pseudorandom number generator for decoration.
+	 * @param rand a pseudorandom number generator for population.
 	 * @param surfaceProvider the world generator's source of {@link tk.valoeghese.worldcomet.api.surface.Surface surfaces}
 	 * @param chunkX the chunk x position. left shift by 4 to get the corresponding start block position.
 	 * @param chunkZ the chunk z position. left shift by 4 to get the corresponding start block position.
