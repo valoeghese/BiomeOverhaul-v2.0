@@ -22,7 +22,6 @@ import tk.valoeghese.worldcomet.api.decoration.FeatureDecorator;
 import tk.valoeghese.worldcomet.api.decoration.StructureGenSettings;
 import tk.valoeghese.worldcomet.api.decoration.WorldDecorator;
 import tk.valoeghese.worldcomet.api.noise.OctaveOpenSimplexNoise;
-import tk.valoeghese.worldcomet.api.surface.SingleSurfaceProvider;
 import tk.valoeghese.worldcomet.api.surface.Surface;
 import tk.valoeghese.worldcomet.api.surface.fractal.FractalLongFunction;
 import tk.valoeghese.worldcomet.api.surface.fractal.FractalSurfaceProvider;
@@ -84,7 +83,7 @@ class TestModStart {
 				.stack(SmoothenShorelineLayer.INSTANCE, 4L)
 				.build())
 				.buildFactory(Height2FractalFunction.ALWAYS_ZERO, surfaceIdMap);
-		
+
 		//LongFunction<SingleSurfaceProvider> spf = SingleSurfaceProvider.factoryOf(Surface.DEFAULT);
 
 		WorldDecorator decorator = WorldDecorator.builder()
