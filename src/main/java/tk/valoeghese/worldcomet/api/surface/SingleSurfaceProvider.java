@@ -27,7 +27,7 @@ public final class SingleSurfaceProvider implements SurfaceProvider {
 	 * @param surface the {@link Surface surface} to use for the world.
 	 * @return a factory for a {@link SingleSurfaceProvider} of the specified {@link Surface}.
 	 */
-	public static LongFunction<SingleSurfaceProvider> factory(Surface surface) {
+	public static LongFunction<SingleSurfaceProvider> factoryOf(Surface surface) {
 		return seed -> new SingleSurfaceProvider(surface);
 	}
 }
