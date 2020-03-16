@@ -18,7 +18,13 @@ public class CoolTreePopulator extends SurfacePopulator {
 
 	@Override
 	protected boolean generate(IWorld world, Random rand, SurfaceProvider surfaceProvider, int x, int y, int z) {
+		// can only generate in Surface.DEFAULT
 		if (surfaceProvider.getSurface(x, z, y - 1) != Surface.DEFAULT) {
+			return false;
+		}
+
+		// can only generate on grass
+		if (world.getBlockState(new BlockPos(x, y - 1, z)).getBlock() != Blocks.GRASS) {
 			return false;
 		}
 

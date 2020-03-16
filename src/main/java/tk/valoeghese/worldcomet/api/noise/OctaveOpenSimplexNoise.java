@@ -49,9 +49,21 @@ public final class OctaveOpenSimplexNoise implements Noise {
 		this.amplitudeHigh = amplitudeHigh;
 	}
 
+	/**
+	 * Compress the y axis of the noise. Useful in 3D depthmap generation.
+	 * 
+	 * @param yStretch multiplier for the y-axis stretch in 3D noise
+	 * @return the {@link OctaveOpenSimplexNoise} instance this is invoked on
+	 */
+	public OctaveOpenSimplexNoise stretch3DY(double yStretch) {
+		this.yStretch = yStretch;
+		return this;
+	}
+
 	private OpenSimplexNoise[] samplers;
 	private double clamp;
 	private double inverseFrequency, amplitudeLow, amplitudeHigh;
+	private double yStretch = 1.0;
 
 	public double sample(double x, double y) {
 		double amplFreq = 0.5D;
@@ -71,7 +83,7 @@ public final class OctaveOpenSimplexNoise implements Noise {
 		double result = 0;
 		for (OpenSimplexNoise sampler : samplers) {
 			double freq = amplFreq * inverseFrequency;
-			result += (amplFreq * sampler.sample(x / freq, y / freq, z / freq));
+			result += (amplFreq * sampler.sample(x / freq, y / (this.yStretch * freq), z / freq));
 
 			amplFreq *= 0.5D;
 		}
@@ -90,7 +102,7 @@ public final class OctaveOpenSimplexNoise implements Noise {
 			OpenSimplexNoise sampler = samplers[i];
 
 			double freq = amplFreq * sampleFreq;
-			result += (amplFreq * sampler.sample(x / freq, y / freq, z / freq));
+			result += (amplFreq * sampler.sample(x / freq, y / (this.yStretch * freq), z / freq));
 
 			amplFreq *= 0.5D;
 		}
