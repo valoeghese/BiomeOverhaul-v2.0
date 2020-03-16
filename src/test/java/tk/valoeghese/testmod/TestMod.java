@@ -32,6 +32,9 @@ import tk.valoeghese.worldcomet.api.terrain.GeneratorSettings;
 import tk.valoeghese.worldcomet.impl.gen.WorldCometChunkGeneratorType;
 import tk.valoeghese.worldcomet.impl.type.WorldType;
 
+/**
+ * @author Valoeghese
+ */
 public class TestMod implements ModInitializer {
 	public static WorldCometChunkGeneratorType<?> cgt;
 	public static WorldType<?> worldType = TestModStart.worldType();

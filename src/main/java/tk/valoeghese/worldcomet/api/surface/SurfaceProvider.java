@@ -12,7 +12,7 @@ public interface SurfaceProvider {
 	/**
 	 * Takes in generation coordinates and returns the surface for generation.
 	 * <p/>
-	 * This may not be necessary for every mod, as some mods will not use surfaces in shaping terrain.
+	 * This may not be necessary for every mod, as some mods will not use surfaces in shaping terrain. If your world generator doesn't use surfaces for generation, you can return a dummy result, such as null or Surface.DEFAULT.
 	 * 
 	 * @param genX x >> 2
 	 * @param genY y >> 3

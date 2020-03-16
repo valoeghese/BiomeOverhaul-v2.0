@@ -10,9 +10,10 @@ import tk.valoeghese.worldcomet.api.surface.Surface;
 import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 import tk.valoeghese.worldcomet.impl.VoronoiSurfaceAccess;
 
+/**
+ * SurfaceProvider which uses fractals and voronoi to choose the surface.
+ */
 public class FractalSurfaceProvider implements SurfaceProvider {
-	private final VoronoiSurfaceAccess voronoiAccess;
-
 	/**
 	 * @apiNote This constructor can be either used directly or handled via the helper factory builder.
 	 * @param seed the world seed.
@@ -24,9 +25,10 @@ public class FractalSurfaceProvider implements SurfaceProvider {
 		this.sampler = sampler;
 		this.surfaceMappingFuntion = surfaceIdMap.getMappingFunction();
 	}
-	
+
 	private final FractalLayerProvider sampler;
 	private final IntFunction<Surface> surfaceMappingFuntion;
+	private final VoronoiSurfaceAccess voronoiAccess;
 
 	@Override
 	public Surface getSurface(int x, int z, int height) {
@@ -39,6 +41,7 @@ public class FractalSurfaceProvider implements SurfaceProvider {
 	}
 
 	/**
+	 * Gives a builder for a fractal LongFunction<SurfaceProvider> which can be used in {@link WorldCometApi#createChunkGenerator.}
 	 * @param defaultFractal the FractalLongFunction to fall back upon if the height input gives an unmapped lookup id.
 	 */
 	public static FactoryBuilder factoryBuilder(FractalLongFunction defaultFractal) {
@@ -50,8 +53,7 @@ public class FractalSurfaceProvider implements SurfaceProvider {
 	}
 
 	/**
-	 * Builder for a fractal LongFunction<SurfaceProvider> which can be used in WorldCometApi#createChunkGenerator.
-	 * @author Valoeghese
+	 * Builder for a fractal LongFunction<SurfaceProvider> which can be used in {@link WorldCometApi#createChunkGenerator.}
 	 */
 	public static class FactoryBuilder {
 		private final FractalLongFunction defaultFractal; // the default fractal, if the Height2FractalFunction returns null
@@ -61,6 +63,12 @@ public class FractalSurfaceProvider implements SurfaceProvider {
 			this.defaultFractal = defaultFractal;
 		}
 
+		/**
+		 * Add the specified {@link FractalLongFunction} to the FractalSurfaceProvider.
+		 * @param lookupId
+		 * @param fractal
+		 * @return
+		 */
 		public FactoryBuilder addFactory(int lookupId, FractalLongFunction fractal) {
 			this.functionIdMap.put(lookupId, fractal);
 			return this;
@@ -84,7 +92,7 @@ public class FractalSurfaceProvider implements SurfaceProvider {
 
 	public static interface FractalLayerProvider extends IntFunction<CachingLayerSampler> {
 	}
-	
+
 	public static interface Height2FractalFunction {
 		int getFractalLookupId(int height);
 
