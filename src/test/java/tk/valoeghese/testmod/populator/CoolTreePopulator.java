@@ -3,13 +3,13 @@ package tk.valoeghese.testmod.populator;
 import java.util.Random;
 
 import net.minecraft.block.Blocks;
+import net.minecraft.block.LeavesBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import tk.valoeghese.worldcomet.api.populator.SurfacePopulator;
 import tk.valoeghese.worldcomet.api.surface.Surface;
 import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 
-// The leaves decay but I can't be bothered to fix it
 public class CoolTreePopulator extends SurfacePopulator {
 	@Override
 	protected int getCount(Random rand, SurfaceProvider surfaceProvider, int chunkX, int chunkZ) {
@@ -58,7 +58,7 @@ public class CoolTreePopulator extends SurfacePopulator {
 		pos.setZ(z);
 
 		pos.setY(y + height);
-		world.setBlockState(pos, Blocks.SPRUCE_LEAVES.getDefaultState(), 19);
+		world.setBlockState(pos, Blocks.SPRUCE_LEAVES.getDefaultState().with(LeavesBlock.DISTANCE, 1), 19);
 
 		for (int yo = 0; yo < height; ++yo) {
 			pos.setY(y + yo);
