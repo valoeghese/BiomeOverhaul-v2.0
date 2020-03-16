@@ -2,6 +2,8 @@ package tk.valoeghese.worldcomet.api.populator;
 
 import java.util.Random;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
@@ -29,5 +31,16 @@ public abstract class Populator implements PopulatorBase {
 	@Override
 	public final void populateChunk(ChunkRegion world, ChunkGenerator<?> generator, Random rand, int chunkX, int chunkZ, SurfaceProvider surfaceProvider, long seed) {
 		this.populateChunk(world, rand, chunkX, chunkZ, surfaceProvider, seed);
+	}
+
+	/**
+	 * Sets the specified block state in the world with the flags 0x1, 0x2, 0x16
+	 * 
+	 * @param world the {@link IWorld} in which to set the block.
+	 * @param pos the position at which to set the block.
+	 * @param state the block state to set.
+	 */
+	protected static void setBlockState(IWorld world, BlockPos pos, BlockState state) {
+		world.setBlockState(pos, state, 19);
 	}
 }

@@ -49,7 +49,7 @@ public class CoolTreePopulator extends SurfacePopulator {
 					}
 
 					pos.setZ(z + zo);
-					world.setBlockState(pos, Blocks.SPRUCE_LEAVES.getDefaultState(), 19);
+					setBlockState(world, pos, Blocks.SPRUCE_LEAVES.getDefaultState());
 				}
 			}
 		}
@@ -58,11 +58,11 @@ public class CoolTreePopulator extends SurfacePopulator {
 		pos.setZ(z);
 
 		pos.setY(y + height);
-		world.setBlockState(pos, Blocks.SPRUCE_LEAVES.getDefaultState().with(LeavesBlock.DISTANCE, 1), 19);
+		setBlockState(world, pos, Blocks.SPRUCE_LEAVES.getDefaultState().with(LeavesBlock.DISTANCE, 1));
 
 		for (int yo = 0; yo < height; ++yo) {
 			pos.setY(y + yo);
-			world.setBlockState(pos, Blocks.SPRUCE_LOG.getDefaultState(), 19);
+			setBlockState(world, pos, Blocks.SPRUCE_LOG.getDefaultState());
 		}
 
 		return true;
