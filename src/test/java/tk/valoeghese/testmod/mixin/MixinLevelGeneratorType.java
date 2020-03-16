@@ -1,14 +1,10 @@
 package tk.valoeghese.testmod.mixin;
 
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+// make sure the level generator type is initialised early enough on servers
+// if the fabric level type pr is merged, this will no longer be necessary
 
-import net.minecraft.world.level.LevelGeneratorType;
-import tk.valoeghese.testmod.TestMod;
-
-// if only the level type pr was merged to fabric
+// Obf name lookup in mixins doesn't seem to work in test sources
+/*
 @Mixin(LevelGeneratorType.class)
 public class MixinLevelGeneratorType {
 	@Inject(at = @At("HEAD"), method = "getTypeFromName", cancellable = true)
@@ -17,4 +13,4 @@ public class MixinLevelGeneratorType {
 			cir.setReturnValue(TestMod.worldType.generatorType);
 		}
 	}
-}
+} */
