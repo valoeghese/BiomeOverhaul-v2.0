@@ -1,6 +1,6 @@
 package tk.valoeghese.worldcomet.impl.gen;
 
-import net.minecraft.world.World;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.gen.chunk.ChunkGeneratorType;
 import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
@@ -19,7 +19,7 @@ public class WorldCometChunkGeneratorType<T extends SurfaceProvider> extends Chu
 	}
 
 	@Override
-	public WorldCometChunkGenerator<T> create(World world, BiomeSource biomeSource, WorldCometChunkGeneratorConfig<T> config) {
+	public WorldCometChunkGenerator<T> create(IWorld world, BiomeSource biomeSource, WorldCometChunkGeneratorConfig<T> config) {
 		return new WorldCometChunkGenerator<>(world, biomeSource, config == null ? this.config : config);
 	}
 }

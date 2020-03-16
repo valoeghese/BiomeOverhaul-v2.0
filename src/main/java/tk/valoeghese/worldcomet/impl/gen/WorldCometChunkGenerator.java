@@ -82,7 +82,7 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 	public void buildSurface(ChunkRegion chunkRegion, Chunk chunk) {
 		int startX = chunk.getPos().getStartX();
 		int startZ = chunk.getPos().getStartZ();
-		this.rand.setSeed(startX, startZ);
+		this.rand.setTerrainSeed(startX, startZ);
 
 		for (int localX = 0; localX < 16; ++localX) {
 			int x = localX + startX;
@@ -279,6 +279,7 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 		int chunkX = region.getCenterChunkX();
 		int chunkZ = region.getCenterChunkZ();
 
+		// unlike ChunkRandom#setTerrainSeed, my code here actually takes into account the world seed when setting the random seed.
 		this.rand.setSeed(this.seed + 8526167 * chunkX - 935177 * chunkZ);
 
 		this.worldPopulator.populateChunk(region, this, this.rand, chunkX, chunkZ, this.surfaceProvider, chunkZ);

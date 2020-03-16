@@ -2,7 +2,11 @@ package tk.valoeghese.worldcomet.impl.type;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.function.BiFunction;
 
+import com.mojang.datafixers.Dynamic;
+
+import net.minecraft.world.level.LevelGeneratorOptions;
 import net.minecraft.world.level.LevelGeneratorType;
 import tk.valoeghese.worldcomet.mixin.LevelGeneratorTypeAccessor;
 
@@ -12,7 +16,7 @@ public final class LevelGeneratorTypeFactory {
 	private static int idToUse = 7;
 	
 	// Credit: Beta-Plus mod, fabric 1.14
-	public static LevelGeneratorType createWorldType(String name) {
+	public static LevelGeneratorType createWorldType(String name, OptionsFactory optionsFactory) {
 		LevelGeneratorType levelGenType;
 		int id = idToUse;
 		Field types = null;
@@ -47,12 +51,15 @@ public final class LevelGeneratorTypeFactory {
 			return null;
 		}
 		try {
-			levelGenType = LevelGeneratorTypeAccessor.create(id, name);
+			levelGenType = LevelGeneratorTypeAccessor.create(id, name, optionsFactory);
 			levelGenType.setCustomizable(false);
 		} catch (Exception e) {
 			return null;
 		}
 
 		return levelGenType;
+	}
+
+	public static interface OptionsFactory extends BiFunction<LevelGeneratorType, Dynamic<?>, LevelGeneratorOptions> {
 	}
 }

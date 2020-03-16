@@ -3,7 +3,6 @@
   "package": "tk.valoeghese.worldcomet.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "OverworldDimensionMixin",
     "LevelGeneratorTypeAccessor"
   ],
   "injectors": {
