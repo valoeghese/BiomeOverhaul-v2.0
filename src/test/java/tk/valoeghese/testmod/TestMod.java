@@ -17,7 +17,7 @@ import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.StructureFeature;
 import tk.valoeghese.testmod.decorator.CoolTreeDecorator;
 import tk.valoeghese.testmod.surface.DesertSurface;
-import tk.valoeghese.worldcomet.api.WorldCometApi;
+import tk.valoeghese.worldcomet.api.WorldComet;
 import tk.valoeghese.worldcomet.api.decoration.FeatureDecorator;
 import tk.valoeghese.worldcomet.api.decoration.StructureGenSettings;
 import tk.valoeghese.worldcomet.api.decoration.WorldDecorator;
@@ -97,7 +97,7 @@ class TestModStart {
 				.addDecorator(FeatureDecorator.of(Feature.NORMAL_TREE.configure(DefaultBiomeFeatures.OAK_TREE_CONFIG), Decorator.COUNT_EXTRA_HEIGHTMAP.configure(new CountExtraChanceDecoratorConfig(2, 0.1f, 1))))
 				.build();
 
-		TestMod.cgt = WorldCometApi.createChunkGeneratorType(settings, depthmapFactory, surfaceProviderFactory, decorator);
-		return WorldCometApi.createWorldType("worldcomet_test", TestMod.cgt, ImmutableSet.of(Biomes.PLAINS, Biomes.DESERT));
+		TestMod.cgt = WorldComet.createChunkGeneratorType(settings, depthmapFactory, surfaceProviderFactory, decorator);
+		return WorldComet.createWorldType("worldcomet_test", TestMod.cgt, ImmutableSet.of(Biomes.PLAINS, Biomes.DESERT, Biomes.WARM_OCEAN, Biomes.OCEAN));
 	}
 }

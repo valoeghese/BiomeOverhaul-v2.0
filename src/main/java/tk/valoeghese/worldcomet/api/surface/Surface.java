@@ -38,11 +38,10 @@ public class Surface {
 	protected BlockState underwaterBlock = Blocks.GRAVEL.getDefaultState();
 
 	/**
-	 * @param surfaceHeight get the biome this surface represents per the height at that point.
-	 * @return
+	 * @param surfaceHeight get the biome this surface represents for the given generated world height (i.e. how high the world has generated).
 	 */
-	public Biome getBiome(int surfaceHeight) {
-		return Biomes.PLAINS;
+	public Biome getBiome(int surfaceHeight, int seaLevel) {
+		return surfaceHeight < seaLevel ? Biomes.OCEAN : Biomes.PLAINS;
 	}
 
 	/**

@@ -8,15 +8,20 @@ import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.gen.feature.StructureFeature;
 
 public final class WorldCometBiomeSource extends BiomeSource {
-	private final long worldSeed;
-	private WorldBiomeManager biomeManager = WorldBiomeManager.NONE;
-
 	public WorldCometBiomeSource(IWorld world, Set<Biome> biomes) {
 		super(biomes);
 		this.worldSeed = world.getSeed();
 	}
 
+	private final long worldSeed;
+
+	// set by the biome manager
+	private int seaLevel = 63;
+	// set by setBiomeManager() in the chunk generator constructor
+	private WorldBiomeManager biomeManager = WorldBiomeManager.NONE;
+
 	public void setBiomeManager(WorldBiomeManager biomeManager) {
+		this.seaLevel = biomeManager.getSeaLevel();
 		this.biomeManager = biomeManager;
 	}
 
@@ -30,7 +35,7 @@ public final class WorldCometBiomeSource extends BiomeSource {
 		final int z = (noiseGenZ << 2);
 		final int height = this.biomeManager.getHeightForXZ(x, z);
 
-		return this.biomeManager.getSurface(x, z, height).getBiome(height);
+		return this.biomeManager.getSurface(x, z, height).getBiome(height, this.seaLevel);
 	}
 
 	@Override

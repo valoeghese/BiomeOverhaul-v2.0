@@ -17,8 +17,8 @@ import tk.valoeghese.worldcomet.impl.gen.WorldCometChunkGeneratorConfig;
 import tk.valoeghese.worldcomet.impl.gen.WorldCometChunkGeneratorType;
 import tk.valoeghese.worldcomet.impl.type.WorldType;
 
-public final class WorldCometApi {
-	private WorldCometApi() {
+public final class WorldComet {
+	private WorldComet() {
 	}
 
 	/**
@@ -36,7 +36,7 @@ public final class WorldCometApi {
 	/**
 	 * Creates a WorldComet {@link WorldType}.
 	 * @param name the name of the world type, the language key derives from this.
-	 * @param chunkGeneratorType the chunk generator type for the world type. Create this using {@link WorldCometApi#createChunkGeneratorType}
+	 * @param chunkGeneratorType the chunk generator type for the world type. Create this using {@link WorldComet#createChunkGeneratorType}
 	 * @param biomes the set of biomes used for calculations such as the possible structures in the world
 	 * @return the created world type.
 	 */

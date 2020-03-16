@@ -14,8 +14,8 @@ public class DesertSurface extends Surface {
 	}
 
 	@Override
-	public Biome getBiome(int surfaceHeight) {
-		return Biomes.DESERT;
+	public Biome getBiome(int surfaceHeight, int seaLevel) {
+		return surfaceHeight < seaLevel ? Biomes.WARM_OCEAN : Biomes.DESERT;
 	}
 
 	@Override

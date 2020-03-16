@@ -9,6 +9,7 @@ public interface WorldBiomeManager {
 	int getHeightForXZ(int x, int z);
 	Surface getSurface(int x, int z, int height);
 	boolean hasStructure(Biome biome, StructureFeature<? extends FeatureConfig> structureFeature);
+	int getSeaLevel();
 
 	WorldBiomeManager NONE = new WorldBiomeManager() {
 		@Override
@@ -22,6 +23,10 @@ public interface WorldBiomeManager {
 		@Override
 		public boolean hasStructure(Biome biome, StructureFeature<? extends FeatureConfig> structureFeature) {
 			return false;
+		}
+		@Override
+		public int getSeaLevel() {
+			return 63;
 		}
 	};
 }
