@@ -29,8 +29,8 @@ import tk.valoeghese.worldcomet.api.surface.fractal.FractalSurfaceProvider.Heigh
 import tk.valoeghese.worldcomet.api.surface.fractal.SurfaceIdMap;
 import tk.valoeghese.worldcomet.api.terrain.Depthmap;
 import tk.valoeghese.worldcomet.api.terrain.GeneratorSettings;
-import tk.valoeghese.worldcomet.impl.gen.WorldCometChunkGeneratorType;
-import tk.valoeghese.worldcomet.impl.type.WorldType;
+import tk.valoeghese.worldcomet.api.type.WorldCometChunkGeneratorType;
+import tk.valoeghese.worldcomet.api.type.WorldType;
 
 /**
  * @author Valoeghese

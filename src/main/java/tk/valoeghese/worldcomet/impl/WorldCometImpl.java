@@ -1,10 +1,19 @@
 package tk.valoeghese.worldcomet.impl;
 
+import java.util.Map;
+
+import com.google.common.collect.Maps;
+import com.mojang.datafixers.Dynamic;
+
+import net.minecraft.world.level.LevelGeneratorOptions;
+import net.minecraft.world.level.LevelGeneratorType;
 import tk.valoeghese.worldcomet.api.surface.Surface;
 import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 import tk.valoeghese.worldcomet.api.terrain.function.DepthmapFunction;
 import tk.valoeghese.worldcomet.api.terrain.function.HeightmapFunction;
 import tk.valoeghese.worldcomet.api.terrain.function.SurfaceDepthmapFunction;
+import tk.valoeghese.worldcomet.api.type.WorldType;
+import tk.valoeghese.worldcomet.api.type.WorldType.OverworldChunkGeneratorFactory;
 import tk.valoeghese.worldcomet.impl.gen.WorldCometChunkGeneratorConfig;
 import tk.valoeghese.worldcomet.impl.gen.WorldCometChunkGeneratorType;
 import tk.valoeghese.worldcomet.util.FunctionalUtils;
@@ -48,7 +57,14 @@ public final class WorldCometImpl {
 		return FunctionalUtils.accumulate(heightMaps, map -> map.getHeight(x, y));
 	}
 
+	public static LevelGeneratorOptions createGeneratorOptions(LevelGeneratorType levelType, Dynamic<?> dynamic, OverworldChunkGeneratorFactory generatorFactory) {
+		return new LevelGeneratorOptions(levelType, dynamic, (world) -> {
+			return generatorFactory.create(world);
+		});
+	}
+
 	public static final SurfaceProvider NONE_SURFACE_PROVIDER = new NoneSurfaceProvider();
+	public static final Map<String, WorldType<?>> STR_TO_WT_MAP = Maps.newHashMap();
 }
 
 class NoneSurfaceProvider implements SurfaceProvider {

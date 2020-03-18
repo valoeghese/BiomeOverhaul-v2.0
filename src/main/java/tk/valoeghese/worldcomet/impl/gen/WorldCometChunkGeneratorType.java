@@ -1,25 +1,13 @@
 package tk.valoeghese.worldcomet.impl.gen;
 
-import net.minecraft.world.IWorld;
-import net.minecraft.world.biome.source.BiomeSource;
-import net.minecraft.world.gen.chunk.ChunkGeneratorType;
 import tk.valoeghese.worldcomet.api.surface.SurfaceProvider;
 
-public class WorldCometChunkGeneratorType<T extends SurfaceProvider> extends ChunkGeneratorType<WorldCometChunkGeneratorConfig<T>, WorldCometChunkGenerator<T>> {
-	private final WorldCometChunkGeneratorConfig<T> config;
-
+/**
+ * @deprecated use the corresponding api class instead
+ */
+@Deprecated
+public class WorldCometChunkGeneratorType<T extends SurfaceProvider> extends tk.valoeghese.worldcomet.api.type.WorldCometChunkGeneratorType<T> {
 	public WorldCometChunkGeneratorType(WorldCometChunkGeneratorConfig<T> config) {
-		super(null, false, () -> config);
-
-		this.config = config;
-	}
-
-	public static void init() {
-		// NO-OP
-	}
-
-	@Override
-	public WorldCometChunkGenerator<T> create(IWorld world, BiomeSource biomeSource, WorldCometChunkGeneratorConfig<T> config) {
-		return new WorldCometChunkGenerator<>(world, biomeSource, config == null ? this.config : config);
+		super(config);
 	}
 }

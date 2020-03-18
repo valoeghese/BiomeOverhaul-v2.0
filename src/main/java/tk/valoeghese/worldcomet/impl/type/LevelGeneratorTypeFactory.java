@@ -12,9 +12,9 @@ import tk.valoeghese.worldcomet.mixin.LevelGeneratorTypeAccessor;
 
 public final class LevelGeneratorTypeFactory {
 	private LevelGeneratorTypeFactory() {}
-	
+
 	private static int idToUse = 7;
-	
+
 	// Credit: Beta-Plus mod, fabric 1.14
 	public static LevelGeneratorType createWorldType(String name, OptionsFactory optionsFactory) {
 		LevelGeneratorType levelGenType;
