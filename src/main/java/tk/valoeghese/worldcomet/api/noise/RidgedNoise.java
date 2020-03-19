@@ -31,6 +31,6 @@ public final class RidgedNoise implements Noise {
 	}
 
 	private double ridge(double input) {
-		return Math.abs(2 * input - this.ridgeOffset) + 1;
+		return -Math.abs(2 * input - this.ridgeOffset) + 1;
 	}
 }
