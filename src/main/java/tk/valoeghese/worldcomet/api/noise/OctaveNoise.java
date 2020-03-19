@@ -3,7 +3,7 @@ package tk.valoeghese.worldcomet.api.noise;
 /**
  * Base class for octave noise samplers.
  */
-public abstract class OctaveNoise {
+public abstract class OctaveNoise implements Noise {
 	protected Noise[] samplers;
 	protected double clamp;
 	protected double amplitudeLow, amplitudeHigh;
@@ -16,6 +16,7 @@ public abstract class OctaveNoise {
 		this.inverseFrequency = stretch * 2;
 	}
 
+	@Override
 	public double sample(double x, double y) {
 		double amplFreq = 0.5D;
 		double result = 0;
@@ -29,6 +30,7 @@ public abstract class OctaveNoise {
 		return result > 0 ? result * amplitudeHigh : result * amplitudeLow;
 	}
 
+	@Override
 	public double sample(double x, double y, double z) {
 		double amplFreq = 0.5D;
 		double result = 0;
