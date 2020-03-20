@@ -131,6 +131,7 @@ public final class Depthmap {
 			return this;
 		}
 
+		@Deprecated
 		public Builder lerpHeightmap(boolean lerpHeightmap) {
 			this.lerpHeightmap = lerpHeightmap;
 			return this;
