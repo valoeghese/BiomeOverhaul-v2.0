@@ -173,7 +173,7 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 
 	@Override
 	public BlockView getColumnSample(int x, int z) {
-		BlockState[] column = new BlockState[255];
+		BlockState[] column = new BlockState[256];
 
 		int chunkX = (x >> 4);
 		int chunkZ = (z >> 4);
