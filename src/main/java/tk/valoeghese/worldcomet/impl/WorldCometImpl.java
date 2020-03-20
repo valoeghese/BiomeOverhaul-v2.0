@@ -16,7 +16,6 @@ import tk.valoeghese.worldcomet.api.type.WorldType;
 import tk.valoeghese.worldcomet.api.type.WorldType.OverworldChunkGeneratorFactory;
 import tk.valoeghese.worldcomet.impl.gen.WorldCometChunkGeneratorConfig;
 import tk.valoeghese.worldcomet.impl.gen.WorldCometChunkGeneratorType;
-import tk.valoeghese.worldcomet.util.FunctionalUtils;
 
 public final class WorldCometImpl {
 	private WorldCometImpl() {
@@ -28,33 +27,70 @@ public final class WorldCometImpl {
 
 	public static double sampleHeightmapDepthmap(int noiseGenX, int noiseGenY, int noiseGenZ, Iterable<HeightmapFunction> heightmaps, Iterable<DepthmapFunction> depthmaps, Iterable<SurfaceDepthmapFunction> surfaceDepthmaps, SurfaceProvider surfaceProvider) {
 		Surface surface = surfaceProvider.getSurfaceForGeneration(noiseGenX, noiseGenY, noiseGenZ);
+		double result = 0.0;
 
-		double result = FunctionalUtils.accumulate(heightmaps, map -> map.getHeight(noiseGenX, noiseGenZ));
-		result += FunctionalUtils.accumulate(depthmaps, map -> map.getHeight(noiseGenX << 2, noiseGenY << 3, noiseGenZ << 2));
-		result += FunctionalUtils.accumulate(surfaceDepthmaps, map -> map.getHeight(noiseGenX << 2, noiseGenY << 3, noiseGenZ << 2, surface));
+		for (HeightmapFunction function : heightmaps) {
+			result += function.getHeight(noiseGenX << 4, noiseGenZ << 4);
+		}
+
+		for (DepthmapFunction function : depthmaps) {
+			result += function.getHeight(noiseGenX << 2, noiseGenY << 3, noiseGenZ << 2);
+		}
+
+		for (SurfaceDepthmapFunction function : surfaceDepthmaps) {
+			result += function.getHeight(noiseGenX << 2, noiseGenY << 3, noiseGenZ << 2, surface);
+		}
+
 		return result;
 	}
 
 	public static double sampleHeightmapDepthmap(int noiseGenX, int noiseGenY, int noiseGenZ, Iterable<HeightmapFunction> heightmaps, Iterable<DepthmapFunction> depthmaps) {
-		double result = FunctionalUtils.accumulate(heightmaps, map -> map.getHeight(noiseGenX << 2, noiseGenZ << 2));
-		result += FunctionalUtils.accumulate(depthmaps, map -> map.getHeight(noiseGenX << 2, noiseGenY << 3, noiseGenZ << 3));
+		double result = 0.0;
+
+		for (HeightmapFunction function : heightmaps) {
+			result += function.getHeight(noiseGenX << 4, noiseGenZ << 4);
+		}
+
+		for (DepthmapFunction function : depthmaps) {
+			result += function.getHeight(noiseGenX << 2, noiseGenY << 3, noiseGenZ << 2);
+		}
+
 		return result;
 	}
 
 	public static double sampleDepthmap(int noiseGenX, int noiseGenY, int noiseGenZ, Iterable<DepthmapFunction> depthmaps, Iterable<SurfaceDepthmapFunction> surfaceDepthmaps, SurfaceProvider surfaceProvider) {
 		Surface surface = surfaceProvider.getSurfaceForGeneration(noiseGenX, noiseGenY, noiseGenZ);
+		double result = 0.0;
 
-		double result = FunctionalUtils.accumulate(depthmaps, map -> map.getHeight(noiseGenX << 2, noiseGenY << 3, noiseGenZ << 2));
-		result += FunctionalUtils.accumulate(surfaceDepthmaps, map -> map.getHeight(noiseGenX << 2, noiseGenY << 3, noiseGenZ << 2, surface));
+		for (DepthmapFunction function : depthmaps) {
+			result += function.getHeight(noiseGenX << 2, noiseGenY << 3, noiseGenZ << 2);
+		}
+
+		for (SurfaceDepthmapFunction function : surfaceDepthmaps) {
+			result += function.getHeight(noiseGenX << 2, noiseGenY << 3, noiseGenZ << 2, surface);
+		}
+
 		return result;
 	}
 
 	public static double sampleDepthmap(int noiseGenX, int noiseGenY, int noiseGenZ, Iterable<DepthmapFunction> depthmaps) {
-		return FunctionalUtils.accumulate(depthmaps, map -> map.getHeight(noiseGenX << 2, noiseGenY << 3, noiseGenZ << 3));
+		double result = 0.0;
+
+		for (DepthmapFunction function : depthmaps) {
+			result += function.getHeight(noiseGenX << 2, noiseGenY << 3, noiseGenZ << 2);
+		}
+
+		return result;
 	}
 
-	public static double sampleHeightmap(int x, int y, Iterable<HeightmapFunction> heightMaps) {
-		return FunctionalUtils.accumulate(heightMaps, map -> map.getHeight(x, y));
+	public static double sampleHeightmap(int x, int z, Iterable<HeightmapFunction> heightmaps) {
+		double result = 0.0;
+
+		for (HeightmapFunction function : heightmaps) {
+			result += function.getHeight(x, z);
+		}
+
+		return result;
 	}
 
 	public static LevelGeneratorOptions createGeneratorOptions(LevelGeneratorType levelType, Dynamic<?> dynamic, OverworldChunkGeneratorFactory generatorFactory) {
