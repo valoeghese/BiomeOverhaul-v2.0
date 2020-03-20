@@ -8,7 +8,7 @@ public class WorldCometInitializer implements ModInitializer {
 	public void onInitialize() {
 		// nothing here, for now
 	}
-	
+
 	public static final Identifier from(String id) {
 		return new Identifier("worldcomet", id);
 	}

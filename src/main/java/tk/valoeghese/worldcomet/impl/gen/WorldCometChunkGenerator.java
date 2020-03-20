@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.Heightmap.Type;
@@ -17,6 +18,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.GenerationStep.Carver;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.world.gen.chunk.VerticalBlockSample;
 import net.minecraft.world.gen.feature.FeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
 import tk.valoeghese.worldcomet.api.noise.OctaveOpenSimplexNoise;
@@ -165,11 +167,13 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 				}
 			}
 		}
+
+		this.depthmap.sculptChunk(chunk, this.getSeed());
 	}
 
 	@Override
-	public int getHeightOnGround(int x, int z, Type heightmapType) {
-		final Predicate<BlockState> blockPredicate = heightmapType.getBlockPredicate();
+	public BlockView getColumnSample(int x, int z) {
+		BlockState[] column = new BlockState[255];
 
 		int chunkX = (x >> 4);
 		int chunkZ = (z >> 4);
@@ -186,8 +190,6 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 		if (nLerpHeightmap) {
 			heightmap = this.depthmap.heightmap(chunkX, chunkZ);
 		}
-
-		int result = 0;
 
 		BlockPos.Mutable pos = new BlockPos.Mutable();
 
@@ -233,16 +235,30 @@ public class WorldCometChunkGenerator<T extends SurfaceProvider> extends ChunkGe
 					toSet = WATER;
 				}
 
-				if (blockPredicate.test(toSet)) {
-					result = y;
-				}
+				column[y] = toSet;
 			}
 
 			low = high;
 			high = sampleNoise(subChunkX, subChunkZ, chunkX, chunkZ, subChunkY);
 		}
 
-		return result;
+		this.depthmap.sculptColumn(x, z, column, this.getSeed());
+		return new VerticalBlockSample(column);
+	}
+
+	@Override
+	public int getHeight(int x, int z, Type heightmapType) {
+		Predicate<BlockState> predicate = heightmapType.getBlockPredicate();
+		BlockView column = this.getColumnSample(x, z);
+
+		BlockPos.Mutable pos = new BlockPos.Mutable();
+		for (int y = 255; y >= 0; --y) {
+			if (predicate.test(column.getBlockState(pos))) {
+				return y;
+			}
+		}
+
+		return 0;
 	}
 
 	private static final BlockState AIR = Blocks.AIR.getDefaultState();
