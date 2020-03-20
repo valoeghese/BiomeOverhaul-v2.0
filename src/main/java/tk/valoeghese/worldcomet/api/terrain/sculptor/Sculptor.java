@@ -17,7 +17,8 @@ public interface Sculptor {
 	 */
 	void sculpt(Chunk chunk, long seed);
 	/**
-	 * Should return at least an approximation of how the {@link Sculptor.sculpt} method sculpts the chunk. Used by vanilla structures and features.
+	 * Should return at least an approximation of how the {@link Sculptor.sculpt} method sculpts the chunk.
+	 * Used by vanilla structures and features, and is used in calculating the height by the WorldComet biome generator.
 	 * @param x the x position which is being sculpted
 	 * @param z the z position which is being sculpted
 	 * @param column the column of blocks to sculpt
