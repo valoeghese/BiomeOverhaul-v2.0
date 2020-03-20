@@ -1,4 +1,4 @@
 # WorldComet API
 API for making custom world types on fabric for minecraft 1.16 snapshots
 
-Current Minecraft Version target: 20w11a
+Current Minecraft Version target: 20w12a
