@@ -50,7 +50,7 @@ public class OpenSimplexNoise extends ImplOpenSimplexNoise {
 
 	@Override
 	public double sample(double x, double y, double z) {
-		return super.sample(x + this.xOffset, y + this.yOffset);
+		return super.sample(x + this.xOffset, y + this.yOffset, z + this.zOffset);
 	}
 
 	@Override
