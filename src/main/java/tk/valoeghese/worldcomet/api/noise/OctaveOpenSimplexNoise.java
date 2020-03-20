@@ -38,7 +38,7 @@ public final class OctaveOpenSimplexNoise extends OctaveNoise {
 		clamp = 1D / (1D - (1D / Math.pow(2, octaves)));
 
 		for (int i = 0; i < octaves; ++i) {
-			samplers[i] = new OpenSimplexNoise(rand.nextLong());
+			samplers[i] = new OpenSimplexNoise(rand);
 		}
 
 		this.setSpread(spread);
